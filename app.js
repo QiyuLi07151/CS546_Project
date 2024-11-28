@@ -16,6 +16,9 @@
 
 import * as itemData from './data/items.js';
 import {closeConnection} from './config/mongoConnection.js';
-console.log(await itemData.getAllItems());
-
+const items = await itemData.getAllItems();
+console.log(items);
+const _item = await itemData.getItemById(items[0]._id);
+console.log(_item);
+console.log("Done!");
 closeConnection();
