@@ -15,4 +15,7 @@
 // });
 
 import * as itemData from './data/items.js';
+import {closeConnection} from './config/mongoConnection.js';
 console.log(await itemData.getAllItems());
+
+closeConnection();
