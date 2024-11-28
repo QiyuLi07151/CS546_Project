@@ -15,14 +15,12 @@ router.get("/", async (req, res) => {
 
 router.get("/:itemId", async (req, res) => {
     let itemId = req.params.itemId;
-    if(!validation.isProvided(itemId))
-        return res.status(400).json({error: "Input is not provided."});
-    if(!validation.isValidString(itemId)){
-        return res.status(400).json({error: "Input is not a valid type."});
-    }
-    itemId = itemId.trim();
-    if(!validation.isValidObjectId(itemId)){
-        return res.status(400).json({error: "Input is not a valid ObjectId."})
+    try {
+        validation.isProvided(itemId);
+        itemId = validation.isValidString(itemId);
+        validation.isValidObjectId(itemId);
+    } catch (e) {
+        return res.status(400).json({error: e});
     }
     try {
         const _item = await itemData.getItemById(itemId);
