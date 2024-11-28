@@ -1,0 +1,17 @@
+{
+  "name": "cs-546-Final-Project",
+  "version": "1.0.0",
+  "description": "My Final Project",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "SIT",
+  "license": "SIT",
+  "dependencies": {
+    "express": "^4.21.1",
+    "mongodb": "^6.9.0",
+    "express-handlebars": "^7.1.2"
+  }
+}
