@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <title>Search Page</title>
     <link rel='stylesheet' href='../public/css/main.css' />
 
 </head>
@@ -22,12 +22,28 @@
 </header>
 
 <div class="nav_bar">
-    <a class="current_page" href="index.html">Home</a>
-    <a class="page" href="search.html">Search</a>
+    <a class="page" href="index.html">Home</a>
+    <a class="current_page" href="search.html">Search</a>
     <a class="page" href="tags.html">Search By Tag</a>
 </div>
 
+<div class="search_bar">
+    <h2>Search For a Product</h2>
+    <form action="">
+        <label for="text_search">
+            Search:
+        </label>
+        <input class="text_search" id="text_search" type="text" placeholder="Search..">
+        <div class="wrap">
+            <button type="submit">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
 
+<ol id="text_search_results">
+</ol>
 
 <footer></footer>
 <script src='../public/js/main.js'></script>
