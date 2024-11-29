@@ -12,7 +12,7 @@ export const getUserById = async (userId) => {
     if (!user) {
       throw new Error("No user found with the given userId");
     }
-    
+     
     //return result
     return user;
 };
