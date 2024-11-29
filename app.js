@@ -1,9 +1,11 @@
 import itemRoutes from './routes/items.js';
+import userRoutes from './routes/users.js';
 import express from 'express';
 const app = express();
 
 app.use('/public', express.static('public'));
 app.use('/item', itemRoutes);
+app.use('/user', userRoutes);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', (req, res) => {
