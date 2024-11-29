@@ -7,7 +7,7 @@ const tagsCollection = await tags();
 export const getTagById = async (tagId) => {
     // determine user exists in database
     let tag = await tagsCollection.findOne({ "_id": new ObjectId(tagId) });
-    console.log(tag);
+    // console.log(tag);
 
     
     if (!tag) {

@@ -1,5 +1,7 @@
 import { items } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import * as tagData from './tags.js'
+
 
 const itemCollection = await items();
 
@@ -20,4 +22,22 @@ export const getItemById = async (itemId) => {
         .findOne({_id: new ObjectId(itemId)})
     if(!_item) throw new Error("Item not found.")
     return _item;
+};
+
+
+export const getAllItemsByTag = async (tagId) => {
+    const tag = await tagData.getTagById(tagId);
+    
+    const itemIds = tag.relativeProduct;
+    // console.log(itemIds);
+    
+    const itemsData = [];
+
+    for(let id of itemIds){
+        let item = await getItemById(id.toString());
+        itemsData.push(item);
+    }
+    // console.log(itemsData);
+    
+    return itemsData;
 };
