@@ -6,7 +6,14 @@ import * as itemData from "../data//items.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
-
+/*
+XIAO
+Completed
+/tag/ : id
+Method : get
+@param Id(String)
+@return JSON Object{}
+*/
 router.get("/:tagId", async (req, res) => {
 
   try {

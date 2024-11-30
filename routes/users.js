@@ -4,6 +4,14 @@ import * as userData from "../data/users.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
+/*
+XIAO
+Completed
+/user/ : id
+Method : get
+@param Id(String)
+@return JSON Object{}
+*/
 router.get("/:userId", async (req, res) => {
   
   try {

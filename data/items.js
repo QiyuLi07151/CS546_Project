@@ -24,20 +24,24 @@ export const getItemById = async (itemId) => {
     return _item;
 };
 
-
-export const getAllItemsByTag = async (tagId) => {
-    const tag = await tagData.getTagById(tagId);
-    
-    const itemIds = tag.relativeProduct;
-    // console.log(itemIds);
-    
+export const getItemByIds = async (itemIds) => {
     const itemsData = [];
 
     for(let id of itemIds){
         let item = await getItemById(id.toString());
         itemsData.push(item);
     }
-    // console.log(itemsData);
+    
+    return itemsData;
+};
+
+
+export const getAllItemsByTag = async (tagId) => {
+    const tag = await tagData.getTagById(tagId);
+    
+    const itemIds = tag.relativeProduct;
+    
+    const itemsData = getItemByIds(itemIds);
     
     return itemsData;
 };
