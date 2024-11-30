@@ -1,66 +1,32 @@
+
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.log('Signup form submitted');
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const passwordCheck = document.getElementById('passwordCheck').value;
+    let currentUser = document.getElementById("current_user");
+    let logout_button = document.getElementById("logout_button");
+    let login_button = document.getElementById("login_button");
+    let signup_button = document.getElementById("signup_button");
 
-        if (password !== passwordCheck) {
-            alert('Passwords do not match. Please try again.');
-            return;
-        }
-
-        try {
-            const response = await fetch('/user/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ Name: username, Password: password, IsOwner: false }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message || 'Signup successful!');
-                window.location.href = '/';
-            } else {
-                alert(data.error || 'Signup failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        }
-    });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    if(localStorage.getItem("username") != "null"){
+        currentUser.hidden = false;
+        currentUser.innerHTML = localStorage.getItem("username");
+        logout_button.hidden = false;
+        login_button.hidden = true;
+        signup_button.hidden = true;
+    }
+    document.getElementById("logout_button").addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ Name: username, Password: password }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message);
-                window.location.href = '/';
-            } else {
-                alert(data.error);
+        //this part does not delete session, needs a look
+        const response = await fetch('/user/login', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        }
+        });
+        window.location.href = '/';
+        localStorage.setItem("username", null);
+        currentUser.hidden = true;
+        logout_button.hidden = true;
+        login_button.hidden = false;
+        signup_button.hidden = false;
     });
 });
