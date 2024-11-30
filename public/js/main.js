@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if(localStorage.getItem("username") != "null"){
         currentUser.hidden = false;
-        currentUser.innerHTML = localStorage.getItem("username");
+        currentUser.innerHTML = "Welcome, " + localStorage.getItem("username");
         logout_button.hidden = false;
         login_button.hidden = true;
         signup_button.hidden = true;
@@ -15,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("logout_button").addEventListener('click', async (e) => {
         e.preventDefault();
 
-        //this part does not delete session, needs a look
-        const response = await fetch('/user/login', {
+        const response = await fetch('/logout', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
