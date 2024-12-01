@@ -8,6 +8,7 @@ export const isProvided = (input) => {
 export const isValidString = (input) => {
     if(typeof input !== 'string' || input.trim().length === 0)
         throw "Input is not a valid string.";
+    
     return input.trim();
 };
 

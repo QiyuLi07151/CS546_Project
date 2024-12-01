@@ -45,3 +45,19 @@ export const getAllItemsByTag = async (tagId) => {
     
     return itemsData;
 };
+
+export const getItemByName = async (itemName) => {
+    const items = await itemCollection
+        .find({ Name: { $regex: itemName, $options: "i" } }) // Case-insensitive match
+        .toArray();
+
+    if (items.length === 0) {
+        throw new Error(`No items found matching the name "${itemName}"`);
+    }
+
+    // Convert ObjectId to string for consistency
+    return items.map((item) => {
+        item._id = item._id.toString();
+        return item;
+    });
+};
