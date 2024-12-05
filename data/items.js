@@ -1,7 +1,7 @@
-import { items } from "../config/mongoCollections.js";
+import { items, tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import * as tagData from './tags.js'
-
+import { addItemToTags } from "./tags.js";
 
 const itemCollection = await items();
 
@@ -60,4 +60,36 @@ export const getItemByName = async (itemName) => {
         item._id = item._id.toString();
         return item;
     });
+};
+
+//tagName should be case-insensitive
+export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus) => {
+    const newItemId = new ObjectId();
+    const newItem = {
+        _id: newItemId,
+        OwnerId: new ObjectId(ownerId),
+        Name: itemName,
+        Description: itemDesc,
+        Tags: itemTags,
+        Price: itemPrice,
+        Image: itemImg,
+        Status: itemStatus,
+        Reviews: [],
+        WishedBy: [],
+        Avg_rating: null
+    };
+    try {
+        const insertInfo = await itemCollection.insertOne(
+            newItem
+        );
+    } catch (error) {
+        throw error;
+    }
+    try {
+        for(let tagName of itemTags){
+            await addItemToTags(newItemId, tagName);
+        }
+    } catch (error) {
+        throw error;
+    }
 };

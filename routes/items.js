@@ -53,6 +53,52 @@ router.get("/:itemId", async (req, res) => {
     }
 });
 
+//ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
+router.post("/addItem", async (req, res) => {
+    const data = req.body;
+    if(!data || Object.keys(data).length === 0)
+        return res.status(400).json({error: 'There are no fields in the request body.'});
+    try {
+        validation.isValidAddItemFuncData(data);
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    let {
+        ownerId,
+        itemName,
+        itemDesc,
+        itemTags,
+        itemPrice,
+        itemImg, 
+        itemStatus
+    } = data;
+    try {
+        validation.isProvided(ownerId);
+        validation.isProvided(itemName);
+        validation.isProvided(itemDesc);
+        validation.isProvided(itemTags);
+        validation.isProvided(itemPrice);
+        validation.isProvided(itemImg);
+        validation.isProvided(itemStatus);
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    try {
+        await itemData.addItem(
+            ownerId,
+            itemName,
+            itemDesc,
+            itemTags,
+            itemPrice,
+            itemImg, 
+            itemStatus);
+        return res.json();
+    } catch (error) {
+        return res.status(500).json({error: error});
+    }
+});
+
+
 /* XIAO
 Completed
 /item/tag/ : id
@@ -83,6 +129,7 @@ router.get("/tag/:tagId", async (req, res) => {
         }
     }
 });
+
 
 /* XIAO
 Completed
