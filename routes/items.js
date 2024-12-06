@@ -98,6 +98,34 @@ router.post("/addItem", async (req, res) => {
     }
 });
 
+router.patch("/addReviewAndRating", async (req, res) => {
+    const data = req.body;
+    let {
+        userId,
+        itemId,
+        review,
+        rating
+    } = data;
+    try {
+        validation.isProvided(userId);
+        validation.isProvided(itemId);
+        validation.isProvided(rating);
+        userId = validation.isValidString(userId);
+        itemId = validation.isValidString(itemId);
+        rating = validation.isValidString(rating);
+        validation.isValidObjectId(userId);
+        validation.isValidObjectId(itemId);
+        validation.isValidNumber(parseInt(rating));
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    try {
+        await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
+        return res.json();
+    } catch (error) {
+        return res.status(500).json({error: error});
+    }
+});
 
 /* XIAO
 Completed

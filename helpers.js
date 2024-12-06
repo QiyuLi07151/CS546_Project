@@ -45,7 +45,8 @@ export const isValidAddItemFuncData = (data) => {
             if(key === 'itemTags'){
                 isValidArray(data[key]);
                 for(let i=0;i<data[key].length;i++){
-                    data[key][i] = data[key][i].toLowerCase();
+                    const value = data[key][i];
+                    data[key][i] = isValidString(value).toLowerCase();
                 }
             }
             if(key === 'itemPrice')

@@ -1,5 +1,5 @@
 import { items, tags } from "../config/mongoCollections.js";
-import { ObjectId } from "mongodb";
+import { ObjectId, ReturnDocument } from "mongodb";
 import * as tagData from './tags.js'
 import { addItemToTags } from "./tags.js";
 
@@ -76,7 +76,8 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
         Status: itemStatus,
         Reviews: [],
         WishedBy: [],
-        Avg_rating: null
+        Avg_rating: 0,
+        Sum_rating: 0
     };
     try {
         const insertInfo = await itemCollection.insertOne(
@@ -89,6 +90,43 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
         for(let tagName of itemTags){
             await addItemToTags(newItemId, tagName);
         }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const addRatingAndReview = async (userId, itemId, rating, review) => {
+    try {
+        const updateInfo = await itemCollection.findOneAndUpdate(
+            {_id: new ObjectId(itemId)},
+            [
+                {
+                    $set: {
+                        Avg_rating: {
+                            $round: [
+                                {
+                                    $divide: [
+                                        {$add: ["$Sum_rating",rating]},
+                                        {$add: [{$size: "$Reviews"}, 1]}
+                                    ]
+                                },
+                                1
+                            ]
+                        },
+                        Sum_rating: { $add: ["$Sum_rating", rating] },
+                        Reviews: { 
+                            $concatArrays: [
+                                "$Reviews",
+                                [{ UserId: new ObjectId(userId), Review: review, Rating: rating }]
+                            ]
+                        },
+                    }
+                }
+            ],
+            {returnDocument: 'after'}
+        );
+        if(!updateInfo) throw "No item founded.";
+        console.log(updateInfo);
     } catch (error) {
         throw error;
     }
