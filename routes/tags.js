@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 import * as tagData from "../data/tags.js";
-import * as itemData from "../data//items.js";
+import * as itemData from "../data/items.js";
 
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
@@ -36,6 +36,22 @@ router.get("/:tagId", async (req, res) => {
     } else {
       return res.status(400).json({ error: errorMessage });
     }
+  }
+});
+
+router.get("/tagName/:tagName", async (req, res) => {
+  let tagName = req.params.tagName;
+  try {
+    validation.isProvided(tagName);
+    tagName = validation.isValidString(tagName);
+  } catch (error) {
+    return res.status(400).json({error: error});
+  }
+  try {
+    const items = await tagData.getItemsByTag(tagName);
+    return res.json(items);
+  } catch (error) {
+    return res.status(404).json({error: error});
   }
 });
 

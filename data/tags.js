@@ -47,3 +47,15 @@ export const addItemToTags = async (itemId, tagName) => {
   }
 };
 
+export const getItemsByTag = async (tagName) => {
+  try {
+    const items = await tagsCollection.findOne(
+      {TagName: tagName},
+      {projection: {"RelativeItem.ItemId": 1, _id: 0}}
+    );
+    if(!items) throw "tagName not found.";
+    return items.RelativeItem;
+  } catch (error) {
+    throw error;
+  }
+};

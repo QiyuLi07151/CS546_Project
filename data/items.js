@@ -20,7 +20,7 @@ export const getAllItems = async () => {
 export const getItemById = async (itemId) => {
     let _item = await itemCollection
         .findOne({_id: new ObjectId(itemId)})
-    if(!_item) throw new Error("Item not found.")
+    if(!_item) throw new Error("item not found.")
     return _item;
 };
 
@@ -125,7 +125,7 @@ export const addRatingAndReview = async (userId, itemId, rating, review) => {
             ],
             {returnDocument: 'after'}
         );
-        if(!updateInfo) throw "No item founded.";
+        if(!updateInfo) throw "item not found..";
         console.log(updateInfo);
     } catch (error) {
         throw error;
