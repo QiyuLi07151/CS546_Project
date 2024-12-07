@@ -14,11 +14,11 @@ Method : get
 @param Id(String)
 @return JSON Object{}
 */
-router.get("/:tagId", async (req, res) => {
+router.get("/tagId", async (req, res) => {
 
   try {
     //pre check
-    let tagId = req.params.tagId;
+    let tagId = req.body.tagId;
     validation.isProvided(tagId);
     tagId = validation.isValidString(tagId);
     validation.isValidObjectId(tagId);
@@ -39,8 +39,8 @@ router.get("/:tagId", async (req, res) => {
   }
 });
 
-router.get("/tagName/:tagName", async (req, res) => {
-  let tagName = req.params.tagName;
+router.get("/tagName", async (req, res) => {
+  let tagName = req.body.tagName;
   try {
     validation.isProvided(tagName);
     tagName = validation.isValidString(tagName);
