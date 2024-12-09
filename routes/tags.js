@@ -2,16 +2,15 @@ import { Router } from "express";
 const router = Router();
 import * as tagData from "../data/tags.js";
 import * as itemData from "../data/items.js";
-
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
 /*
 XIAO
 Completed
-/tag/ : id
+/tagId
 Method : get
-@param Id(String)
+@param body:Id(String)
 @return JSON Object{}
 */
 router.get("/tagId", async (req, res) => {
@@ -54,5 +53,24 @@ router.get("/tagName", async (req, res) => {
     return res.status(404).json({error: error});
   }
 });
+
+
+router.post("/tags", async (req, res) => {
+  let tagName = req.body.tagName;
+  try {
+    validation.isProvided(tagName);
+    tagName = validation.isValidString(tagName);
+  } catch (error) {
+    return res.status(400).json({error: error});
+  }
+  try {
+    const tags =  await tagData.getTagsByName(tagName);
+    return res.status(200).json(tags);
+  } catch (error) {
+    return res.status(404).json({error: error});
+  }
+});
+
+
 
 export default router;

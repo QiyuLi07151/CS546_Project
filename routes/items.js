@@ -7,24 +7,11 @@ import * as validation from "../helpers.js";
 
 router.get("/", async (req, res) => {
     try {
-        // Retrieve the 'name' query parameter
-        let itemName = req.query.name;
 
-        if(itemName) {
-            // Validate the query parameter
-            validation.isProvided(itemName);
-            validation.isValidString(itemName);
-            
-            // Perform the search
-            const items = await itemData.getItemByName(itemName);
+        // If no 'name' is provided, return all items
+        const itemList = await itemData.getAllItems();
+        return res.status(200).json(itemList);
 
-            // Return search results
-            return res.status(200).json(items);
-        } else {
-            // If no 'name' is provided, return all items
-            const itemList = await itemData.getAllItems();
-            return res.status(200).json(itemList);
-        }
     } catch (error) {
         const errorMessage = error.message || error;
 
@@ -56,12 +43,12 @@ router.get("/:itemId", async (req, res) => {
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
     const data = req.body;
-    if(!data || Object.keys(data).length === 0)
-        return res.status(400).json({error: 'There are no fields in the request body.'});
+    if (!data || Object.keys(data).length === 0)
+        return res.status(400).json({ error: 'There are no fields in the request body.' });
     try {
         validation.isValidAddItemFuncData(data);
     } catch (error) {
-        return res.status(400).json({error: error});
+        return res.status(400).json({ error: error });
     }
     let {
         ownerId,
@@ -69,7 +56,7 @@ router.post("/addItem", async (req, res) => {
         itemDesc,
         itemTags,
         itemPrice,
-        itemImg, 
+        itemImg,
         itemStatus
     } = data;
     try {
@@ -81,7 +68,7 @@ router.post("/addItem", async (req, res) => {
         validation.isProvided(itemImg);
         validation.isProvided(itemStatus);
     } catch (error) {
-        return res.status(400).json({error: error});
+        return res.status(400).json({ error: error });
     }
     try {
         await itemData.addItem(
@@ -90,11 +77,11 @@ router.post("/addItem", async (req, res) => {
             itemDesc,
             itemTags,
             itemPrice,
-            itemImg, 
+            itemImg,
             itemStatus);
         return res.json();
     } catch (error) {
-        return res.status(500).json({error: error});
+        return res.status(500).json({ error: error });
     }
 });
 
@@ -117,13 +104,13 @@ router.patch("/addReviewAndRating", async (req, res) => {
         validation.isValidObjectId(itemId);
         validation.isValidNumber(parseInt(rating));
     } catch (error) {
-        return res.status(400).json({error: error});
+        return res.status(400).json({ error: error });
     }
     try {
         await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
         return res.json();
     } catch (error) {
-        return res.status(500).json({error: error});
+        return res.status(500).json({ error: error });
     }
 });
 
@@ -197,14 +184,14 @@ router.get("/user/:userId", async (req, res) => {
 /*
 XIAO
 In progress
-/items/:name
+/item/:name
 @param name(String)
 @return Array[ Object{} ]
 */
 router.get("/:name", async (req, res) => {
     try {
         // pre check
-        let itemName = req.params.name;
+        let itemName = req.body.name;
         validation.isProvided(itemName);
         itemName = validation.isValidString(itemName);
 
