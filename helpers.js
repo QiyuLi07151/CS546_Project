@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { getTotalDataNumber } from "./data/items.js";
+import { getTotalDataNumberForTagName } from "./data/tags.js";
 
 export const isProvided = (input) => {
     if(!input) 
@@ -72,6 +73,22 @@ export const isPageValid = async (page) => {
     }
     page = parseInt(page.trim());
     const total = await getTotalDataNumber();
+    const totalPage = Math.ceil(total / 5);
+    if(totalPage === 0){
+        return 1;
+    }
+    if(page > totalPage){
+        return totalPage;
+    }
+    return page;
+};
+
+export const isPageValidForTagName = async (tagName, page) => {
+    if(!isProvided(page) || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
+        return 1;
+    }
+    page = parseInt(page.trim());
+    const total = await getTotalDataNumberForTagName(tagName);
     const totalPage = Math.ceil(total / 5);
     if(totalPage === 0){
         return 1;

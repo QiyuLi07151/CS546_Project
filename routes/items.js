@@ -7,7 +7,8 @@ import * as validation from "../helpers.js";
 
 router.get("/", async (req, res) => {
     try {
-        const page = await validation.isPageValid(req.query.page);
+        let page = req.query.page? req.query.page: "1";
+        page = await validation.isPageValid(req.query.page);
         validation.isProvided(page);
         const itemList = await itemData.getAllItems(page);
         return res.status(200).json(itemList);

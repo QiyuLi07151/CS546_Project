@@ -4,6 +4,13 @@ import * as validation from '../helpers.js'
 
 const tagsCollection = await tags();
 
+export const getTotalDataNumberForTagName = async (tagName) => {
+  const items = await tagsCollection.findOne(
+    { TagName: tagName }
+  );
+  return items.RelativeItem.length;
+};
+
 export const getTagById = async (tagId) => {
   // determine user exists in database
   let tag = await tagsCollection.findOne({ "_id": new ObjectId(tagId) });
@@ -51,9 +58,11 @@ export const getItemsByTag = async (tagName) => {
   try {
     const items = await tagsCollection.findOne(
       { TagName: tagName },
-      { projection: { "RelativeItem.ItemId": 1, _id: 0 } }
+      { projection: { "RelativeItem": 1, _id: 0 } }
     );
     if (!items) throw "tagName not found.";
+    if(items.RelativeItem.length === 0) throw "No item with that tagName.";
+    items.RelativeItem.sort((a,b) => b.UpvoteCount - a.UpvoteCount);
     return items.RelativeItem;
   } catch (error) {
     throw error;

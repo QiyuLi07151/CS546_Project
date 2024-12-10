@@ -32,27 +32,30 @@ export const getItemById = async (itemId) => {
     return _item;
 };
 
-export const getItemByIds = async (itemIds) => {
-    const itemsData = [];
+export const getItemByIds = async (itemIds, page) => {
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    const items = [];
+    await fetchItems(items, itemIds);
+    return items;
+};
 
-    for(let id of itemIds){
-        let item = await getItemById(id.toString());
-        itemsData.push(item);
+async function fetchItems(items, itemIds) {
+    for (const element of itemIds) {
+        const item = await getItemById(element);
+        items.push(item);
     }
-    
-    return itemsData;
-};
+}
 
-
-export const getAllItemsByTag = async (tagId) => {
-    const tag = await tagData.getTagById(tagId);
+// export const getAllItemsByTag = async (tagId) => {
+//     const tag = await tagData.getTagById(tagId);
     
-    const itemIds = tag.relativeProduct;
+//     const itemIds = tag.relativeProduct;
     
-    const itemsData = getItemByIds(itemIds);
+//     const itemsData = getItemByIds(itemIds);
     
-    return itemsData;
-};
+//     return itemsData;
+// };
 
 export const getItemByName = async (itemName) => {
     const items = await itemCollection
