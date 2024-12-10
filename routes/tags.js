@@ -39,15 +39,20 @@ router.get("/tagId", async (req, res) => {
 });
 
 router.get("/tagName", async (req, res) => {
-  let tagName = req.body.tagName;
+  let tagName = req.query.tagName;
+  let page = req.query.page? req.query.page: "1";
   try {
     validation.isProvided(tagName);
     tagName = validation.isValidString(tagName);
+    page = await validation.isPageValidForTagName(tagName, page);
+   
   } catch (error) {
     return res.status(400).json({error: error});
   }
   try {
-    const items = await tagData.getItemsByTag(tagName);
+    const itemIds = await tagData.getItemsByTag(tagName);
+    const ids = itemIds.map(item => item.ItemId);
+    const items = await itemData.getItemByIds(ids, page);
     return res.json(items);
   } catch (error) {
     return res.status(404).json({error: error});
