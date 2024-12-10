@@ -1,13 +1,91 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.log('Signup form submitted');
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const passwordCheck = document.getElementById('passwordCheck').value;
+    const signupForm = document.getElementById('signupForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordCheckInput = document.getElementById('passwordCheck');
 
+    // Tooltip display helper
+    const showTooltip = (input, message) => {
+        let tooltip = input.parentElement.querySelector('.tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.classList.add('tooltip');
+            tooltip.style.color = '#555';
+            tooltip.style.fontSize = '12px';
+            tooltip.style.marginTop = '5px';
+            input.parentElement.appendChild(tooltip);
+        }
+        tooltip.textContent = message;
+    };
+
+    const removeTooltip = (input) => {
+        const tooltip = input.parentElement.querySelector('.tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+    };
+
+    // Event listeners for tooltips
+    usernameInput.addEventListener('focus', () => {
+        showTooltip(usernameInput, 'Username must be 5-15 alphanumeric characters.');
+    });
+    usernameInput.addEventListener('blur', () => {
+        removeTooltip(usernameInput);
+    });
+
+    passwordInput.addEventListener('focus', () => {
+        showTooltip(
+            passwordInput,
+            'Password must be at least 8 characters long, include one uppercase letter, one digit, one special character, and have no spaces.'
+        );
+    });
+    passwordInput.addEventListener('blur', () => {
+        removeTooltip(passwordInput);
+    });
+
+    passwordCheckInput.addEventListener('focus', () => {
+        showTooltip(passwordCheckInput, 'Please re-enter your password for confirmation.');
+    });
+    passwordCheckInput.addEventListener('blur', () => {
+        removeTooltip(passwordCheckInput);
+    });
+
+    // Display error helper
+    const displayError = (form, message) => {
+        let errorDiv = form.querySelector('.error-message');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.style.color = 'red';
+            errorDiv.style.marginTop = '10px';
+            form.prepend(errorDiv);
+        }
+        errorDiv.textContent = message;
+    };
+
+    const clearError = (form) => {
+        const errorDiv = form.querySelector('.error-message');
+        if (errorDiv) {
+            errorDiv.textContent = '';
+        }
+    };
+
+    // Handle form submission
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearError(signupForm);
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+        const passwordCheck = passwordCheckInput.value;
+
+        // Validate inputs
+        if (!/^[a-zA-Z0-9]{5,15}$/.test(username)) {
+            displayError(signupForm, 'Username must be 5-15 alphanumeric characters.');
+            return;
+        }
         if (password !== passwordCheck) {
-            alert('Passwords do not match. Please try again.');
+            displayError(signupForm, 'Passwords do not match. Please try again.');
             return;
         }
 
@@ -23,14 +101,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message || 'Signup successful!');
-                window.location.href = '/';
+                clearError(signupForm);
+                const successDiv = document.createElement('div');
+                successDiv.style.color = 'green';
+                successDiv.style.marginTop = '10px';
+                successDiv.textContent = data.message || 'Signup successful!';
+                signupForm.appendChild(successDiv);
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
             } else {
-                alert(data.error || 'Signup failed. Please try again.');
+                displayError(signupForm, data.error || 'Signup failed. Please try again.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            displayError(signupForm, 'An error occurred. Please try again.');
         }
     });
 });
