@@ -1,8 +1,10 @@
 import { ObjectId } from "mongodb";
+import { getTotalDataNumber } from "./data/items.js";
 
 export const isProvided = (input) => {
     if(!input) 
         throw "Input is not provided.";
+    return true;
 };
 
 export const isValidString = (input) => {
@@ -11,6 +13,10 @@ export const isValidString = (input) => {
     
     return input.trim();
 };
+
+function isIntegerString(str) {
+    return /^-?\d+$/.test(str);
+}
 
 export const isValidObjectId = (input) => {
     if(!ObjectId.isValid(input))
@@ -57,4 +63,21 @@ export const isValidAddItemFuncData = (data) => {
     } catch (error) {
         throw error;
     }
+};
+
+// prevent page > totalPage, and prevent page < 1;
+export const isPageValid = async (page) => {
+    if(!isProvided(page) || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
+        return 1;
+    }
+    page = parseInt(page.trim());
+    const total = await getTotalDataNumber();
+    const totalPage = Math.ceil(total / 5);
+    if(totalPage === 0){
+        return 1;
+    }
+    if(page > totalPage){
+        return totalPage;
+    }
+    return page;
 };

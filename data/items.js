@@ -5,10 +5,18 @@ import { addItemToTags } from "./tags.js";
 
 const itemCollection = await items();
 
-export const getAllItems = async () => {
+export const getTotalDataNumber = async () => {
+    return await itemCollection.countDocuments({});
+}
+
+export const getAllItems = async (page) => {
+    const limit = 5;
+    const skip = (page - 1) * limit;
     let itemList = await itemCollection
         .find({})
         .sort({Avg_rating: -1})
+        .skip(skip)
+        .limit(limit)
         .toArray();
     itemList = itemList.map((item) => {
         item._id = item._id.toString();

@@ -7,14 +7,12 @@ import * as validation from "../helpers.js";
 
 router.get("/", async (req, res) => {
     try {
-
-        // If no 'name' is provided, return all items
-        const itemList = await itemData.getAllItems();
+        const page = await validation.isPageValid(req.query.page);
+        validation.isProvided(page);
+        const itemList = await itemData.getAllItems(page);
         return res.status(200).json(itemList);
-
     } catch (error) {
         const errorMessage = error.message || error;
-
         if (errorMessage.includes("No items found matching the name")) {
             return res.status(404).json({ error: "No items found matching the name" });
         } else {
@@ -23,8 +21,8 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:itemId", async (req, res) => {
-    let itemId = req.params.itemId;
+router.get("/itemId", async (req, res) => {
+    let itemId = req.body.itemId;
     try {
         validation.isProvided(itemId);
         itemId = validation.isValidString(itemId);
