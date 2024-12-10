@@ -1,6 +1,5 @@
-import { items, tags } from "../config/mongoCollections.js";
+import { items } from "../config/mongoCollections.js";
 import { ObjectId, ReturnDocument } from "mongodb";
-import * as tagData from './tags.js'
 import { addItemToTags } from "./tags.js";
 
 const itemCollection = await items();
@@ -137,7 +136,28 @@ export const addRatingAndReview = async (userId, itemId, rating, review) => {
             {returnDocument: 'after'}
         );
         if(!updateInfo) throw "item not found..";
-        console.log(updateInfo);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const addTagToItem = async (tagName, itemId) => {
+    try {
+        const item = await itemCollection
+            .findOne(
+                {_id: new ObjectId(itemId)},
+                {projection: {Tags: 1, _id: 0}}
+            );
+        if(!item) throw "item not found.";
+        if(item.Tags.includes(tagName)){
+            throw "tagName already exists.";
+        }
+        const updateInfo = await itemCollection.findOneAndUpdate(
+            {_id: new ObjectId(itemId)},
+            {$push: {Tags: tagName}},
+            {returnDocument: 'after'}
+        );
+        await addItemToTags(itemId, tagName);
     } catch (error) {
         throw error;
     }

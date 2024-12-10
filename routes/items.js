@@ -39,6 +39,25 @@ router.get("/itemId", async (req, res) => {
     }
 });
 
+router.patch("/addTagToItem", async (req, res) => {
+    let tagName = req.body.tagName, itemId = req.body.itemId;
+    try {
+        validation.isProvided(tagName);
+        validation.isProvided(itemId);
+        itemId = validation.isValidString(itemId);
+        tagName = validation.isValidString(tagName);
+        validation.isValidObjectId(itemId);
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    try {
+        await itemData.addTagToItem(tagName, itemId);
+        return res.status(200).json();
+    } catch (error) {
+        return res.status(404).json({error: error});
+    }
+});
+
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
     const data = req.body;
