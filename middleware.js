@@ -5,7 +5,8 @@ add.use(myMiddleWare()). you can also just define them in the app.js if you like
 */
 const logger = (req, res, next) => {
   const isAuthenticated = req.session.user ? 'Authenticated' : 'Non-Authenticated';
-  const role = req.session.user?.role || 'N/A';
+  req.session.user.IsOwner = req.session.user.IsOwner === false ? "Owner" : "Not Owner";
+  const role = req.session.user?.IsOwner || 'N/A';
   console.log(
     `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${isAuthenticated} - ${role})`
   );
