@@ -5,15 +5,19 @@ add.use(myMiddleWare()). you can also just define them in the app.js if you like
 */
 const logger = (req, res, next) => {
   const isAuthenticated = req.session.user ? 'Authenticated' : 'Non-Authenticated';
-  req.session.user.IsOwner = req.session.user.IsOwner === false ? "Owner" : "Not Owner";
-  const role = req.session.user?.IsOwner || 'N/A';
+  let role = req.session.user?.IsOwner || 'N/A';
+  if(isAuthenticated === 'Authenticated'){
+    console.log(req.session.user.IsOwner);
+    role = req.session.user.IsOwner == false ? "Not Owner" : "Owner";
+  }
+  
   console.log(
     `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${isAuthenticated} - ${role})`
   );
 
   if (req.path === '/') {
     if (req.session.user) {
-      const redirectPath = req.session.user.IsOwner === 'false' ? '/index.html' : '/index.html';
+      const redirectPath = req.session.user.IsOwner === 'Owner' ? '/index.html' : '/index.html';
       return res.redirect(redirectPath);
     } else {
       return res.redirect('/login.html');
