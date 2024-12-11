@@ -26,7 +26,7 @@ export const getTagById = async (tagId) => {
 };
 
 export const getAllTags = async () => {
-  let allTags = tags.find({}, {_id: 1, TagName: 1}).toArray();
+  let allTags = await tagsCollection.find({}, {_id: 1, TagName: 1}).toArray();
   if(!allTags){
     throw 'Error fetching tags';
   }
