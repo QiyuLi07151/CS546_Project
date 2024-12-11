@@ -1,6 +1,4 @@
-import itemRoutes from './routes/items.js';
-import userRoutes from './routes/users.js';
-import tagRoutes from './routes//tags.js';
+
 import express from 'express';
 import session from 'express-session'
 import path from 'path';
