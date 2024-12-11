@@ -76,6 +76,15 @@ router.post("/tags", async (req, res) => {
   }
 });
 
+router.get("/tags",  async (req, res) => {
+  let allTags = await tagData.getAllTags();
+  if(allTags.length == 0){
+    return res.status(404).json({error: "No Tags Yet"});
+  }else{
+    return res.status(200).json(allTags);
+  }
+});
+
 
 
 export default router;
