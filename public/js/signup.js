@@ -84,6 +84,19 @@ document.addEventListener('DOMContentLoaded', function () {
             displayError(signupForm, 'Username must be 5-15 alphanumeric characters.');
             return;
         }
+        if (
+            password.length < 8 ||
+            !/[A-Z]/.test(password) ||
+            !/[0-9]/.test(password) ||
+            !/[^a-zA-Z0-9]/.test(password) ||
+            /\s/.test(password)
+        ) {
+            displayError(
+                signupForm,
+                'Password must be at least 8 characters long, with one uppercase letter, one digit, one special character, and no spaces.'
+            );
+            return;
+        }
         if (password !== passwordCheck) {
             displayError(signupForm, 'Passwords do not match. Please try again.');
             return;
