@@ -206,7 +206,7 @@ In progress
 @param name(String)
 @return Array[ Object{} ]
 */
-router.get("/:name", async (req, res) => {
+router.post("/:name", async (req, res) => {
     try {
         // pre check
         let itemName = req.body.name;

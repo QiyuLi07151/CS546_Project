@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tags.length === 0) {
             const noResultItem = document.createElement("li");
             noResultItem.textContent = "No tags found.";
-            noResultItem.style.color = "#888";
+            
             tagSuggestions.appendChild(noResultItem);
             return;
         }

@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!tooltip) {
             tooltip = document.createElement('div');
             tooltip.classList.add('tooltip');
-            tooltip.style.color = '#555';
-            tooltip.style.fontSize = '12px';
-            tooltip.style.marginTop = '5px';
             input.parentElement.appendChild(tooltip);
         }
         tooltip.textContent = message;
@@ -56,8 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!errorDiv) {
             errorDiv = document.createElement('div');
             errorDiv.classList.add('error-message');
-            errorDiv.style.color = 'red';
-            errorDiv.style.marginTop = '10px';
             form.prepend(errorDiv);
         }
         errorDiv.textContent = message;
@@ -66,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearError = (form) => {
         const errorDiv = form.querySelector('.error-message');
         if (errorDiv) {
-            errorDiv.textContent = '';
+            errorDiv.remove();
         }
     };
 
@@ -116,8 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 clearError(signupForm);
                 const successDiv = document.createElement('div');
-                successDiv.style.color = 'green';
-                successDiv.style.marginTop = '10px';
+                successDiv.classList.add('success-message');
                 successDiv.textContent = data.message || 'Signup successful!';
                 signupForm.appendChild(successDiv);
                 setTimeout(() => {
