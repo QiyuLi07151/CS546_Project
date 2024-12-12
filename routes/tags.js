@@ -95,15 +95,4 @@ router.post("/upvoteTags",  async (req, res) => {
   }
 });
 
-router.post("/removeUpvoteTags",  async (req, res) => {
-  const { userId, itemId, tagId } = req.body;
-  try {
-    const result =  await tagData.removeUpvoteTag(userId, itemId, tagId);
-    return res.status(200).json(result);
-  } catch (error) {
-    return res.status(404).json({error: error});
-  }
-});
-
-
 export default router;

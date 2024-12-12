@@ -107,60 +107,52 @@ export const checkUserUpvoted = async (userId, itemId, tagId) => {
 
 export const upvoteTags = async (userId, itemId, tagId) => {
   const hasUpvoted = await checkUserUpvoted(userId, itemId, tagId);
-  if (hasUpvoted) {
-    throw 'User has already upvoted this tag';
-  }
-
-  const tagResult = await tagsCollection.updateOne(
-    { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) },
-    {
-      $inc: { "RelativeItem.$.UpvoteCount": 1 },
-      $addToSet: { "RelativeItem.$.UpvoteUsers": new ObjectId(userId) },
-    }
-  );
-
-  if (tagResult.modifiedCount === 0) {
-    throw 'Failed to upvote tag';
-  }
-
-  const userResult = await usersCollection.updateOne(
-    { _id: new ObjectId(userId) },
-    { $addToSet: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
-  );
-
-  if (userResult.modifiedCount === 0) {
-    throw 'Failed to update user\'s upvoted tags';
-  }
-
-  return { message: 'Tag upvoted successfully' };
-};
-
-export const removeUpvoteTag = async (userId, itemId, tagId) => {
-  const hasUpvoted = await checkUserUpvoted(userId, itemId, tagId);
   if (!hasUpvoted) {
-    throw 'User has not upvoted this tag, cannot remove upvote';
-  }
+    const tagResult = await tagsCollection.updateOne(
+      { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) },
+      {
+        $inc: { "RelativeItem.$.UpvoteCount": 1 },
+        $addToSet: { "RelativeItem.$.UpvoteUsers": new ObjectId(userId) },
+      }
+    );
 
-  const tagResult = await tagsCollection.updateOne(
-    { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) },
-    {
-      $inc: { "RelativeItem.$.UpvoteCount": -1 },
-      $pull: { "RelativeItem.$.UpvoteUsers": new ObjectId(userId) }
+    if (tagResult.modifiedCount === 0) {
+      throw 'Failed to upvote tag';
     }
-  );
 
-  if (tagResult.modifiedCount === 0) {
-    throw 'Failed to remove upvote tag';
+    const userResult = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $addToSet: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
+    );
+
+    if (userResult.modifiedCount === 0) {
+      throw 'Failed to update user\'s upvoted tags';
+    }
+
+    return { message: 'Tag upvoted successfully' };
   }
+  if (hasUpvoted) {
+    const tagResult = await tagsCollection.updateOne(
+      { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) },
+      {
+        $inc: { "RelativeItem.$.UpvoteCount": -1 },
+        $pull: { "RelativeItem.$.UpvoteUsers": new ObjectId(userId) }
+      }
+    );
 
-  const userResult = await usersCollection.updateOne(
-    { _id: new ObjectId(userId) },
-    { $pull: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
-  );
+    if (tagResult.modifiedCount === 0) {
+      throw 'Failed to remove upvote tag';
+    }
 
-  if (userResult.modifiedCount === 0) {
-    throw 'Failed to update user\'s upvoted tags';
+    const userResult = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $pull: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
+    );
+
+    if (userResult.modifiedCount === 0) {
+      throw 'Failed to update user\'s upvoted tags';
+    }
+
+    return { message: 'Tag upvote removed successfully' };
   }
-
-  return { message: 'Tag upvote removed successfully' };
 };

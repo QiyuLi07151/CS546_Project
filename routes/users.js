@@ -80,4 +80,14 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.post("/updateFavoriteItem", async (req, res) => {
+  const { userId, itemId } = req.body;
+  try {
+    const result = await userData.updateFavoriteItem(userId, itemId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(404).json({ error: error });
+  }
+});
+
 export default router;
