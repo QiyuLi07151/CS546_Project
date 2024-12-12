@@ -16,7 +16,7 @@ app.use(
         cookie: { maxAge: 1800000 }
     })
 );
-app.use(middleware.logger);
+// app.use(middleware.logger);
 
 app.use('/public', express.static('public'));
 app.use('/static', express.static('static'));

@@ -1,46 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search By Tag Page</title>
-    <link rel='stylesheet' href='../public/css/tags.css' />
+    <link rel="stylesheet" href="../public/css/tags.css" />
+  </head>
 
-</head>
+  <body>
+    <div class="login">
+      <a id="login_button" class="login_button" href="login.html">Login</a>
+      <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
+      <a id="current_user" class="current_user" hidden>Username</a>
+      <button id="logout_button" class="logout_button" hidden>Logout</button>
+    </div>
 
-<body>
-<div class="login">
-    <a id = "login_button" class="login_button" href="login.html">Login</a>
-    <a id = "signup_button" class="signup_button" href="signup.html">SignUp</a>
-    <a id="current_user" class="current_user" hidden>Username</a>
-    <button id="logout_button" class="logout_button" hidden>Logout</button>
-</div>
+    <header>
+      <h1>Place Holder Title</h1>
+    </header>
 
-<header>
-    <h1>Place Holder Title</h1>
-</header>
+    <div class="nav_bar">
+      <a class="page" href="index.html">Home</a>
+      <a class="page" href="search.html">Search</a>
+      <a class="current_page" href="tags.html">Search By Tag</a>
+    </div>
 
-<div class="nav_bar">
-    <a class="page" href="index.html">Home</a>
-    <a class="page" href="search.html">Search</a>
-    <a class="current_page" href="tags.html">Search By Tag</a>
-</div>
+    <div class="tag_search">
+      <h2>Search By Tag</h2>
+      <p class="no_tags" id="no_tags" hidden>
+        We're sorry, but there are no tags yet.
+      </p>
+      <div class="tag_button_group">
+        <!--put tags as buttons here-->
+        <ul class="tags_list" id="tags_list"></ul>
+      </div>
+    </div>
 
-
-
-<div class="tag_search">
-    <h2>Search By Tag</h2>
-    <p class="no_tags" id="no_tags" hidden>We're sorry, but there are no tags yet.</p>
-        <div class="tag_button_group">
-            <!--put tags as buttons here-->
-            <ul class = "tags_list" id="tags_list"></ul>
-        </div>
-</div>
-
-
-<footer></footer>
-<script src='../public/js/tags.js'></script>
-</body>
-
+    <footer></footer>
+    <script src="../public/js/tags.js"></script>
+  </body>
+  
 </html>

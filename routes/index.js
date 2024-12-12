@@ -12,32 +12,32 @@ const constructorMethod = (app) => {
   app.use('/user', userRoutes);
   app.use('/tag', tagRoutes);
 
-  app.get('/login.html', middleware.checkNotAuthenticated, (req, res) => {
+  app.get('/login.html', (req, res) => {
     res.sendFile(path.resolve('./static/login.html'));
   });
-  app.get('/signup.html', middleware.checkNotAuthenticated, (req, res) => {
+  app.get('/signup.html', (req, res) => {
     res.sendFile(path.resolve('./static/signup.html'));
   });
-  app.get('/index.html', middleware.checkAuthenticated, (req, res) => {
+  app.get('/index.html', (req, res) => {
     res.sendFile(path.resolve('./static/index.html'));
   });
-  app.get('/search.html', middleware.checkAuthenticated, (req, res) => {
+  app.get('/search.html', (req, res) => {
     res.sendFile(path.resolve('./static/search.html'));
   });
-  app.get('/tags.html', middleware.checkAuthenticated, (req, res) => {
+  app.get('/tags.html', (req, res) => {
     res.sendFile(path.resolve('./static/tags.html'));
   });
-  app.get('/item.html', middleware.checkAuthenticated, (req, res) => {
+  app.get('/item.html', (req, res) => {
     res.sendFile(path.resolve('./static/item.html'));
   });
-  app.get('/listing.html', middleware.checkAuthenticated, (req, res) => {
+  app.get('/listing.html', (req, res) => {
     res.sendFile(path.resolve('./static/listing.html'));
   });
-  app.get('/login.html', middleware.checkNotAuthenticated, (req, res) => {
+  app.get('/login.html', (req, res) => {
     res.redirect('/');
   });
 
-  app.get('/logout', middleware.checkAuthenticated, (req, res) => {
+  app.get('/logout', (req, res) => {
     req.session.destroy(err => {
       if (err) {
         console.log(err);
@@ -45,6 +45,42 @@ const constructorMethod = (app) => {
       res.redirect('/');
     });
   });
+
+
+
+  // app.get('/login.html', middleware.checkNotAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/login.html'));
+  // });
+  // app.get('/signup.html', middleware.checkNotAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/signup.html'));
+  // });
+  // app.get('/index.html', middleware.checkAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/index.html'));
+  // });
+  // app.get('/search.html', middleware.checkAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/search.html'));
+  // });
+  // app.get('/tags.html', middleware.checkAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/tags.html'));
+  // });
+  // app.get('/item.html', middleware.checkAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/item.html'));
+  // });
+  // app.get('/listing.html', middleware.checkAuthenticated, (req, res) => {
+  //   res.sendFile(path.resolve('./static/listing.html'));
+  // });
+  // app.get('/login.html', middleware.checkNotAuthenticated, (req, res) => {
+  //   res.redirect('/');
+  // });
+
+  // app.get('/logout', middleware.checkAuthenticated, (req, res) => {
+  //   req.session.destroy(err => {
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //     res.redirect('/');
+  //   });
+  // });
 
   app.use('/', (req, res) => {
     res.sendFile(path.resolve('./static/index.html'));
