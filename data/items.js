@@ -105,37 +105,106 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
     }
 };
 
-export const addRatingAndReview = async (userId, itemId, rating, review) => {
+export const deleteRatingAndReview = async (userId, itemId) => {
     try {
-        const updateInfo = await itemCollection.findOneAndUpdate(
-            {_id: new ObjectId(itemId)},
+        const isPresent = await isPresentRatingAndReview(userId, itemId);
+        if(!isPresent) return null;
+        const item = await itemCollection.findOneAndUpdate(
+            {
+                _id: new ObjectId(itemId),
+            },
             [
                 {
                     $set: {
-                        Avg_rating: {
-                            $round: [
-                                {
-                                    $divide: [
-                                        {$add: ["$Sum_rating",rating]},
-                                        {$add: [{$size: "$Reviews"}, 1]}
+                        Reviews: {
+                            $filter: {
+                                input: "$Reviews",
+                                as: "review",
+                                cond: {
+                                    $ne: [
+                                        "$$review.UserId", new ObjectId(userId)
                                     ]
-                                },
-                                1
-                            ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    $set: {
+                        Sum_rating: {
+                            $sum: "$Reviews.Rating"
                         },
-                        Sum_rating: { $add: ["$Sum_rating", rating] },
-                        Reviews: { 
-                            $concatArrays: [
-                                "$Reviews",
-                                [{ UserId: new ObjectId(userId), Review: review, Rating: rating }]
+                        Avg_rating: {
+                            $cond: [
+                                {$gt: [{$size: "$Reviews"}, 0]},
+                                {$round: [{$avg: "$Reviews.Rating"},2]},
+                                0
                             ]
-                        },
+                        }
                     }
                 }
             ],
-            {returnDocument: 'after'}
-        );
-        if(!updateInfo) throw "item not found..";
+            {
+                returnDocument: "after"
+            }
+        );        
+        return item;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const isPresentRatingAndReview = async(userId, itemId) => {
+    try {
+        const item = await itemCollection.findOne({
+            _id: new ObjectId(itemId),
+            Reviews: { $elemMatch: {UserId: new ObjectId(userId)}}
+        });
+        if(item) return true;
+        return false;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const addRatingAndReview = async (userId, itemId, rating, review) => {
+    try {
+        const isPresent = await isPresentRatingAndReview(userId, itemId);
+        if(!isPresent){
+            const updateInfo = await itemCollection.findOneAndUpdate(
+                {_id: new ObjectId(itemId)},
+                [
+                    {
+                        $set: {
+                            Avg_rating: {
+                                $round: [
+                                    {
+                                        $divide: [
+                                            {$add: ["$Sum_rating",rating]},
+                                            {$add: [{$size: "$Reviews"}, 1]}
+                                        ]
+                                    },
+                                    1
+                                ]
+                            },
+                            Sum_rating: { $add: ["$Sum_rating", rating] },
+                            Reviews: { 
+                                $concatArrays: [
+                                    "$Reviews",
+                                    [{ UserId: new ObjectId(userId), Review: review, Rating: rating }]
+                                ]
+                            },
+                        }
+                    }
+                ],
+                {returnDocument: 'after'}
+            );
+            return updateInfo;
+        }else{
+            return null;
+        }
+        
     } catch (error) {
         throw error;
     }

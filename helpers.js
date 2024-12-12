@@ -27,6 +27,8 @@ export const isValidObjectId = (input) => {
 export const isValidNumber = (input) => {
     if(typeof input !== 'number' || isNaN(input))
         throw "Input is not a valid number.";
+    if(input > 5)
+        throw "Rating could more than 5.";
 };
 
 export const isValidArray = (input) => {
