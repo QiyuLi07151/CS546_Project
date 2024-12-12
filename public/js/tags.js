@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', async(e) => {
             for(let n = 0; n < allTags.length; n++){
                 const tagli = document.createElement('li');
                 const tagButton = document.createElement('a');
+                tagli.class = 'tag_li';
+                tagButton.class = 'tag_button';
                 tagButton.textContent = allTags[n].TagName;
                 tagButton.href = "/tag/tagName?tagName=" + allTags[n].TagName;
                 tagli.appendChild(tagButton);

@@ -1,0 +1,9 @@
+li{
+    display: inline-block;
+    vertical-align: top;
+}
+ul{
+    margin: 0 auto;
+    text-align: left;
+    gap: 5px;
+}
