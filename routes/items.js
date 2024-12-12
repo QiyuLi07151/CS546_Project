@@ -171,10 +171,10 @@ Method : get
 @param Id(String)
 @return Array[ Object{} ]
 */
-router.get("/user/:userId", async (req, res) => {
+router.get("/user", async (req, res) => {
     try {
         // pre check
-        let userId = req.params.userId;
+        let userId = req.query.userId;
         validation.isProvided(userId);
         userId = validation.isValidString(userId);
         validation.isValidObjectId(userId);
@@ -206,10 +206,10 @@ In progress
 @param name(String)
 @return Array[ Object{} ]
 */
-router.post("/:name", async (req, res) => {
+router.post("/name", async (req, res) => {
     try {
         // pre check
-        let itemName = req.body.name;
+        let itemName = req.query.name;
         validation.isProvided(itemName);
         itemName = validation.isValidString(itemName);
 
