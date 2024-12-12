@@ -1,18 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/tags')
-        .then(allTags => {
+document.addEventListener('DOMContentLoaded', async(e) => {
+    e.preventDefault();
+    try{
+        let response = await fetch('/tag/allTags', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        let allTags = await response.json();
+        if (allTags.length > 0) {
+            let errorDiv = document.getElementById('no_tags');
+            errorDiv.hidden = true;
             const tags_list = document.getElementById('tags_list');
-            allTags.forEach(tag=>{
+            for(let n = 0; n < allTags.length; n++){
                 const tagli = document.createElement('li');
                 const tagButton = document.createElement('a');
-                tagButton.textContent = tag.TagName;
-                tagButton.href = "/tagName/${tag.TagName}";
+                tagButton.textContent = allTags[n].TagName;
+                tagButton.href = "/tag/tagName?tagName=" + allTags[n].TagName;
                 tagli.appendChild(tagButton);
                 tags_list.appendChild(tagli);
-            });
-        })
-        .catch(e => {
+            }
+        } else {
             let errorDiv = document.getElementById('no_tags');
-            no_tags.hidden = false;
-        });
+            errorDiv.hidden = false;
+        }
+    }catch(e){
+        let errorDiv = document.getElementById('no_tags');
+        errorDiv.hidden = false;
+    }
+
 });
