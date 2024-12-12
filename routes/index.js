@@ -36,6 +36,9 @@ const constructorMethod = (app) => {
   app.get('/login.html', (req, res) => {
     res.redirect('/');
   });
+  app.get('/wishlist.html', (req, res) => {
+    res.sendFile(path.resolve('./static/wishlist.html'));
+  });
 
   app.get('/logout', (req, res) => {
     req.session.destroy(err => {

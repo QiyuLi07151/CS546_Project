@@ -3,6 +3,7 @@ const router = Router();
 import bcrypt from 'bcryptjs'
 import session from 'express-session'
 import * as userData from "../data/users.js";
+import * as itemData from "../data/items.js"
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
@@ -94,6 +95,30 @@ router.post("/updateFavoriteItem", async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json({ error: error });
+  }
+});
+
+router.get("/userId/wishlist", async (req, res) => {
+  try {
+    let userId = req.query.userId;
+    validation.isProvided(userId);
+    userId = validation.isValidString(userId);
+    validation.isValidObjectId(userId);
+ 
+    const user = await userData.getUserById(userId);
+
+    const wishlistItems = [];
+    for (const itemId of user.Wishlist) {
+        const item = await itemData.getItemById(itemId);
+        if (item) {
+            wishlistItems.push(item);
+        }
+    }
+
+    res.json(wishlistItems);
+
+  } catch (e) {
+    res.status(400).json({ error: e });
   }
 });
 
