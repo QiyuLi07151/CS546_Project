@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
      
         const itemImageDiv = document.getElementById('item_image');
-        if (item.ImageUrl) {
+        if (item.Image) {
             let itemImage = document.createElement('img');
-            itemImage.src = item.ImageUrl;
+            itemImage.src = item.Image;
             itemImage.alt = item.Name;
             itemImageDiv.appendChild(itemImage);
         }

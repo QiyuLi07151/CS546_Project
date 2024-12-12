@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
                 tagCard.className = 'tag_card';
                 tagName.className = 'tag_name';
                 tagName.textContent = allTags[n].TagName;
-                tagName.href = "/tag/tagName?tagName=" + allTags[n].TagName;
+                tagName.href = "/listing.html?tagName=" + allTags[n].TagName;
                 tagCard.appendChild(tagName);
                 tags_list.appendChild(tagCard);
             }
