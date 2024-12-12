@@ -88,10 +88,20 @@ router.get("/allTags",  async (req, res) => {
 router.post("/upvoteTags",  async (req, res) => {
   const { userId, itemId, tagId } = req.body;
   try {
+    validation.isProvided(userId);
+    validation.isProvided(itemId);
+    validation.isProvided(tagId);
+    userId = validation.isValidString(userId);
+    itemId = validation.isValidString(itemId);
+    tagId = validation.isValidString(tagId);
+    validation.isValidObjectId(userId);
+    validation.isValidObjectId(itemId);
+    validation.isValidObjectId(tagId);
     const result =  await tagData.upvoteTags(userId, itemId, tagId);
+    if(!result) return res.status(404).json({error: "Either userId, itemId, tagId not found."});
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(404).json({error: error});
+    return res.status(400).json({error: error});
   }
 });
 

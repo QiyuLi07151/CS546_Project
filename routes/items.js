@@ -139,10 +139,10 @@ Method : get
 @param Id(String)
 @return Array[ Object{} ]
 */
-router.get("/tag/:tagId", async (req, res) => {
+router.get("/tag/tagId", async (req, res) => {
     try {
         // pre check
-        let tagId = req.params.tagId;
+        let tagId = req.query.tagId;
         validation.isProvided(tagId);
         tagId = validation.isValidString(tagId);
         validation.isValidObjectId(tagId);
