@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
     req.session.user = user
     res.status(200).json({ message: 'Login Successful' });
   } catch (e) {
-    res.status(404).json({ error: e });
+    res.status(400).json({ error: e });
   }
 });
 
@@ -76,17 +76,24 @@ router.post('/register', async (req, res) => {
 
     res.status(200).json({ message: 'User Registration Successful' });
   } catch (e) {
-    res.status(404).json({ error: e });
+    res.status(400).json({ error: e });
   }
 });
 
 router.post("/updateFavoriteItem", async (req, res) => {
   const { userId, itemId } = req.body;
   try {
+    validation.isProvided(userId);
+    validation.isProvided(itemId);
+    userId = validation.isValidString(userId);
+    validation.isValidObjectId(userId);
+    itemId = validation.isValidString(itemId);
+    validation.isValidObjectId(itemId);
     const result = await userData.updateFavoriteItem(userId, itemId);
+    if(!result) return res.status(404).json({error: "Either userId or itemId not found."});
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(404).json({ error: error });
+    return res.status(400).json({ error: error });
   }
 });
 
