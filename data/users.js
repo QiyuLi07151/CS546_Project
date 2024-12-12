@@ -20,7 +20,12 @@ export const getUserById = async (userId) => {
 };
 
 export const getUserByName = async (userName) => {
-  let user = await usersCollection.findOne({ "Name": userName });
+  let user = await usersCollection.findOne({
+    // "Name": userName 
+    $expr: {
+      $eq: [{ $toLower: "$Name" }, userName.toLowerCase()]
+    }
+  });
 
   return user;
 };
