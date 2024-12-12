@@ -81,6 +81,9 @@ router.post("/addItem", async (req, res) => {
         validation.isProvided(ownerId);
         validation.isProvided(itemName);
         validation.isProvided(itemDesc);
+        if(itemDesc.length > 150){
+            throw "Item description should be less than 150 characters.";
+        }
         validation.isProvided(itemTags);
         validation.isProvided(itemPrice);
         validation.isProvided(itemImg);
@@ -145,6 +148,8 @@ router.patch("/modifyReviewAndRating", async (req, res) => {
         validation.isValidObjectId(userId);
         validation.isValidObjectId(itemId);
         validation.isValidNumber(parseInt(rating));
+        if(parseInt(rating) > 5)
+            throw "Rating could more than 5.";
     } catch (error) {
         return res.status(400).json({ error: error });
     }
@@ -202,6 +207,8 @@ router.patch("/addReviewAndRating", async (req, res) => {
         validation.isValidObjectId(userId);
         validation.isValidObjectId(itemId);
         validation.isValidNumber(parseInt(rating));
+        if(parseInt(rating) > 5)
+            throw "Rating could more than 5.";
     } catch (error) {
         return res.status(400).json({ error: error });
     }
