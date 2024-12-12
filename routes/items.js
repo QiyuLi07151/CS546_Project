@@ -103,6 +103,87 @@ router.post("/addItem", async (req, res) => {
     }
 });
 
+router.patch("/addComment", async (req, res) => {
+    const data = req.body;
+    let {
+        itemId,
+        comment
+    } = data;
+    try {
+        validation.isProvided(itemId);
+        validation.isProvided(comment);
+        itemId = validation.isValidString(itemId);
+        comment = validation.isValidString(comment);
+        validation.isValidObjectId(itemId);
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    try {
+        const updateInfo = await itemData.addComment(itemId, comment);
+        if(!updateInfo) return res.status(404).json({error: "not Found"});
+        return res.status(200).json(updateInfo);
+    } catch (error) {
+        return res.status(500).json({error:"Internal Server Error"});
+    }
+});
+
+router.patch("/modifyReviewAndRating", async (req, res) => {
+    const data = req.body;
+    let {
+        userId,
+        itemId,
+        review,
+        rating
+    } = data;
+    try {
+        validation.isProvided(userId);
+        validation.isProvided(itemId);
+        validation.isProvided(rating);
+        userId = validation.isValidString(userId);
+        itemId = validation.isValidString(itemId);
+        rating = validation.isValidString(rating);
+        validation.isValidObjectId(userId);
+        validation.isValidObjectId(itemId);
+        validation.isValidNumber(parseInt(rating));
+    } catch (error) {
+        return res.status(400).json({ error: error });
+    }
+    try {
+        const item = await itemData.isPresentRatingAndReview(userId, itemId);
+        if(!item) return res.status(404).json({error: "not found"});
+        await itemData.deleteRatingAndReview(userId, itemId);
+        const updateItem = await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
+        return res.status(200).json(updateItem);
+    } catch (error) {
+        return res.status(500).json({error: error});
+    }
+});
+
+router.patch("/deleteReviewAndRating", async (req, res) => {
+    const data = req.body;
+    let {
+        userId,
+        itemId
+    } = data;
+    try {
+        validation.isProvided(userId);
+        validation.isProvided(itemId);
+        userId = validation.isValidString(userId);
+        itemId = validation.isValidString(itemId);
+        validation.isValidObjectId(userId);
+        validation.isValidObjectId(itemId);
+    } catch (error) {
+        return res.status(400).json({error: error});
+    }
+    try {
+        const item = await itemData.deleteRatingAndReview(userId, itemId);
+        if(!item) return res.status(404).json({error: "not Found"});
+        return res.status(200).json(item);
+    } catch (error) {
+        return res.status(500).json({error: error});
+    }
+});
+
 router.patch("/addReviewAndRating", async (req, res) => {
     const data = req.body;
     let {
@@ -125,8 +206,9 @@ router.patch("/addReviewAndRating", async (req, res) => {
         return res.status(400).json({ error: error });
     }
     try {
-        await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
-        return res.json();
+        const item = await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
+        if(!item) return res.status(400).json({error: "You have left a review, do you want to modify it?"});
+        return res.json(item);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
@@ -139,29 +221,29 @@ Method : get
 @param Id(String)
 @return Array[ Object{} ]
 */
-router.get("/tag/tagId", async (req, res) => {
-    try {
-        // pre check
-        let tagId = req.query.tagId;
-        validation.isProvided(tagId);
-        tagId = validation.isValidString(tagId);
-        validation.isValidObjectId(tagId);
+// router.get("/tag/tagId", async (req, res) => {
+//     try {
+//         // pre check
+//         let tagId = req.query.tagId;
+//         validation.isProvided(tagId);
+//         tagId = validation.isValidString(tagId);
+//         validation.isValidObjectId(tagId);
 
-        // get items by tagId
-        const items = await itemData.getAllItemsByTag(tagId);
+//         // get items by tagId
+//         const items = await itemData.getAllItemsByTag(tagId);
 
-        // return
-        return res.status(200).json(items);
-    } catch (error) {
-        const errorMessage = error.message || error;
+//         // return
+//         return res.status(200).json(items);
+//     } catch (error) {
+//         const errorMessage = error.message || error;
 
-        if (errorMessage.includes("No tag found with the given tag")) {
-            return res.status(404).json({ error: "No tag found with the given tag" });
-        } else {
-            return res.status(400).json({ error: errorMessage });
-        }
-    }
-});
+//         if (errorMessage.includes("No tag found with the given tag")) {
+//             return res.status(404).json({ error: "No tag found with the given tag" });
+//         } else {
+//             return res.status(400).json({ error: errorMessage });
+//         }
+//     }
+// });
 
 
 /* XIAO
