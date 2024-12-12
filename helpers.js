@@ -68,7 +68,7 @@ export const isValidAddItemFuncData = (data) => {
 
 // prevent page > totalPage, and prevent page < 1;
 export const isPageValid = async (page) => {
-    if(!isProvided(page) || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
+    if(!page || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
         return 1;
     }
     page = parseInt(page.trim());
@@ -84,7 +84,7 @@ export const isPageValid = async (page) => {
 };
 
 export const isPageValidForTagName = async (tagName, page) => {
-    if(!isProvided(page) || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
+    if(!page || !isIntegerString(page.trim()) || parseInt(page.trim()) < 1){
         return 1;
     }
     page = parseInt(page.trim());

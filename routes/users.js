@@ -14,11 +14,11 @@ Method : get
 @param Id(String)
 @return JSON Object{}
 */
-router.get("/:userId", async (req, res) => {
+router.get("/userId", async (req, res) => {
 
   try {
     //pre check
-    let userId = req.params.userId;
+    let userId = req.query.userId;
     validation.isProvided(userId);
     userId = validation.isValidString(userId);
     validation.isValidObjectId(userId);
