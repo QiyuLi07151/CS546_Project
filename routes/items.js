@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/itemId", async (req, res) => {
-    let itemId = req.body.itemId;
+    let itemId = req.query.itemId;
     try {
         validation.isProvided(itemId);
         itemId = validation.isValidString(itemId);
