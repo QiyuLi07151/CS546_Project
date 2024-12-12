@@ -87,7 +87,8 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
         Reviews: [],
         WishedBy: [],
         Avg_rating: 0,
-        Sum_rating: 0
+        Sum_rating: 0,
+        Comment: []
     };
     try {
         const insertInfo = await itemCollection.insertOne(
@@ -104,7 +105,18 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
         throw error;
     }
 };
-
+export const addComment = async (itemId, comment) => {
+    try {
+        const updateInfo = await itemCollection.findOneAndUpdate(
+            {_id: new ObjectId(itemId)},
+            {$push:{Comment: comment}},
+            {returnDocument: 'after'}
+        );
+        return updateInfo;
+    } catch (error) {
+        throw error;
+    }
+}
 export const deleteRatingAndReview = async (userId, itemId) => {
     try {
         const isPresent = await isPresentRatingAndReview(userId, itemId);
