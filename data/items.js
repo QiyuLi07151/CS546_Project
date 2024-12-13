@@ -138,7 +138,7 @@ export const deleteRatingAndReview = async (userId, itemId) => {
                         Avg_rating: {
                             $cond: [
                                 {$gt: [{$size: "$Reviews"}, 0]},
-                                {$round: [{$avg: "$Reviews.Rating"},2]},
+                                {$round: [{$avg: "$Reviews.Rating"},1]},
                                 0
                             ]
                         }
