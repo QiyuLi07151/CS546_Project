@@ -106,30 +106,6 @@ router.post("/addItem", async (req, res) => {
     }
 });
 
-router.patch("/addComment", async (req, res) => {
-    const data = req.body;
-    let {
-        itemId,
-        comment
-    } = data;
-    try {
-        validation.isProvided(itemId);
-        validation.isProvided(comment);
-        itemId = validation.isValidString(itemId);
-        comment = validation.isValidString(comment);
-        validation.isValidObjectId(itemId);
-    } catch (error) {
-        return res.status(400).json({error: error});
-    }
-    try {
-        const updateInfo = await itemData.addComment(itemId, comment);
-        if(!updateInfo) return res.status(404).json({error: "not Found"});
-        return res.status(200).json(updateInfo);
-    } catch (error) {
-        return res.status(500).json({error:"Internal Server Error"});
-    }
-});
-
 router.patch("/modifyReviewAndRating", async (req, res) => {
     const data = req.body;
     let {
