@@ -156,6 +156,16 @@ router.route('/register')
 
 
 
+app.get('/logout', middleware.checkAuthenticated, (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/');
+  });
+});
+
+
 router.get("/wishlist", async (req, res) => {
   try {
     if (!req.session.user) {
