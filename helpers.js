@@ -3,10 +3,12 @@ import { getTotalDataNumber } from "./data/items.js";
 import { getTotalDataNumberForTagName } from "./data/tags.js";
 
 export const isProvided = (input) => {
-    if(!input) 
+    if (input === null || input === undefined) {
         throw "Input is not provided.";
+    }
     return true;
 };
+
 
 export const isValidString = (input) => {
     if(typeof input !== 'string' || input.trim().length === 0)

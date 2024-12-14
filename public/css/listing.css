@@ -1,0 +1,26 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .item {
+    background: #2c3e50;
+    padding: 16px;
+    color: #ecf0f1;
+    text-align: center;
+    border-radius: 8px;
+  }
+  
+  .item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .item {
+      flex: 0 0 50%;
+    }
+  }
