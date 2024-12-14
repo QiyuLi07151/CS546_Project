@@ -3,13 +3,7 @@ import express from 'express';
 import session from 'express-session'
 import path from 'path';
 import middleware from './middleware.js';
-import configRoutes from './routes/index.js';
-
-import exphbs from 'express-handlebars';
-import dotenv from 'dotenv';
-dotenv.config();
-
-
+import configRoutes from './routes/index.js'
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,11 +18,8 @@ app.use(
 );
 // app.use(middleware.logger);
 
-app.engine('handlebars', exphbs.engine());
-app.set('view engine', 'handlebars');
-app.set('views', './views');
 app.use('/public', express.static('public'));
-// app.use('/static', express.static('static'));
+app.use('/static', express.static('static'));
 
 configRoutes(app);
 app.listen(3000, () => {

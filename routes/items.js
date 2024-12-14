@@ -10,16 +10,8 @@ router.get("/", async (req, res) => {
         let page = req.query.page ? req.query.page : "1";
         page = await validation.isPageValid(req.query.page);
         validation.isProvided(page);
-        const { itemList, hasNextPage, totalPages } = await itemData.getAllItems(page);
-
-        const previousPage = page > 1 ? page - 1 : null;
-        const nextPage = hasNextPage ? page + 1 : null;
-
-        let user = req.session.user;
-        res.render('listing', {
-            title: "Item List", itemList: itemList, page: page, user: user, previousPage,
-            nextPage
-        });
+        const itemList = await itemData.getAllItems(page);
+        return res.status(200).json(itemList);
     } catch (error) {
         const errorMessage = error.message || error;
         if (errorMessage.includes("No items found matching the name")) {
@@ -30,8 +22,8 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
-    let itemId = req.params.id;
+router.get("/itemId", async (req, res) => {
+    let itemId = req.query.itemId;
     try {
         validation.isProvided(itemId);
         itemId = validation.isValidString(itemId);
@@ -40,9 +32,8 @@ router.get("/:id", async (req, res) => {
         return res.status(400).json({ error: e });
     }
     try {
-
         const _item = await itemData.getItemById(itemId);
-        res.render('item', { title: _item.Name, item: _item, user: req.session.user });
+        return res.json(_item);
     } catch (e) {
         return res.status(404).json({ error: e });
     }
@@ -262,71 +253,71 @@ Method : get
 // });
 
 
-// /* XIAO
-// Completed
-// /item/user/:userId
-// Method : get
-// @param Id(String)
-// @return Array[ Object{} ]
-// */
-// router.get("/user", async (req, res) => {
-//     try {
-//         // pre check
-//         let userId = req.query.userId;
-//         validation.isProvided(userId);
-//         userId = validation.isValidString(userId);
-//         validation.isValidObjectId(userId);
+/* XIAO
+Completed
+/item/user/:userId
+Method : get
+@param Id(String)
+@return Array[ Object{} ]
+*/
+router.get("/user", async (req, res) => {
+    try {
+        // pre check
+        let userId = req.query.userId;
+        validation.isProvided(userId);
+        userId = validation.isValidString(userId);
+        validation.isValidObjectId(userId);
 
-//         // get user by userId
-//         const user = await userData.getUserById(userId);
+        // get user by userId
+        const user = await userData.getUserById(userId);
 
-//         // get items data
-//         const itemIds = user.Wishlist;
-//         const items = await itemData.getItemByIds(itemIds);
+        // get items data
+        const itemIds = user.Wishlist;
+        const items = await itemData.getItemByIds(itemIds);
 
-//         // return
-//         return res.status(200).json(items);
-//     } catch (error) {
-//         const errorMessage = error.message || error;
+        // return
+        return res.status(200).json(items);
+    } catch (error) {
+        const errorMessage = error.message || error;
 
-//         if (errorMessage.includes("No user found with the given userId")) {
-//             return res.status(404).json({ error: "No user found with the given userId" });
-//         } else {
-//             return res.status(400).json({ error: errorMessage });
-//         }
-//     }
-// });
+        if (errorMessage.includes("No user found with the given userId")) {
+            return res.status(404).json({ error: "No user found with the given userId" });
+        } else {
+            return res.status(400).json({ error: errorMessage });
+        }
+    }
+});
 
-// /*
-// XIAO
-// In progress
-// /item/:name
-// @param name(String)
-// @return Array[ Object{} ]
-// */
-// router.post("/name", async (req, res) => {
-//     try {
-//         // pre check
-//         let itemName = req.query.name;
-//         validation.isProvided(itemName);
-//         itemName = validation.isValidString(itemName);
+/*
+XIAO
+In progress
+/item/:name
+@param name(String)
+@return Array[ Object{} ]
+*/
+router.post("/name", async (req, res) => {
+    try {
+        // pre check
+        let itemName = req.query.name;
+        validation.isProvided(itemName);
+        itemName = validation.isValidString(itemName);
 
-//         // get item by itemName
-//         const items = await userData.getItemByName(itemName);
+        // get item by itemName
+        const items = await userData.getItemByName(itemName);
 
 
 
-//         // return
-//         return res.status(200).json(items);
-//     } catch (error) {
-//         const errorMessage = error.message || error;
+        // return
+        return res.status(200).json(items);
+    } catch (error) {
+        const errorMessage = error.message || error;
 
-//         if (errorMessage.includes("No user found with the given userId")) {
-//             return res.status(404).json({ error: "No user found with the given userId" });
-//         } else {
-//             return res.status(400).json({ error: errorMessage });
-//         }
-//     }
-// });
+        if (errorMessage.includes("No user found with the given userId")) {
+            return res.status(404).json({ error: "No user found with the given userId" });
+        } else {
+            return res.status(400).json({ error: errorMessage });
+        }
+    }
+});
 
 export default router;
