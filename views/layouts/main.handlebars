@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/public/css/sitestyles.css">
+</head>
+
+<body>
+    <header>
+        <div class="login">
+            {{#if user }}
+            <a id="current_user" class="current_user">{{user.Name}}</a>
+            <button id="logout_button" class="logout_button">Logout</button>
+            {{ else }}
+            <a id="login_button" class="login_button" href="/user/login">Login</a>
+            <a id="signup_button" class="signup_button" href="/user/register">SignUp</a>
+            {{/if}}
+        </div>
+    </header>
+
+    <main>
+        {{{body}}}
+    </main>
+
+</body>
+
+</html>

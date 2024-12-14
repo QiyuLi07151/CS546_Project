@@ -13,7 +13,7 @@ export const getAllItems = async (page) => {
     const skip = (page - 1) * limit;
     let itemList = await itemCollection
         .find({})
-        .sort({Avg_rating: -1})
+        .sort({ Avg_rating: -1 })
         .skip(skip)
         .limit(limit)
         .toArray();
@@ -21,20 +21,26 @@ export const getAllItems = async (page) => {
         item._id = item._id.toString();
         return item;
     });
-    return itemList;
+    const totalItems = await itemCollection.countDocuments();
+    const hasNextPage = skip + limit < totalItems;
+    return {
+        itemList,
+        hasNextPage,
+        totalPages: Math.ceil(totalItems / limit)
+    };
 };
 
 export const getItemById = async (itemId) => {
     let _item = await itemCollection
-        .findOne({_id: new ObjectId(itemId)})
-    if(!_item) throw new Error("item not found.")
+        .findOne({ _id: new ObjectId(itemId) })
+    if (!_item) throw new Error("item not found.")
     return _item;
 };
 
 export const getItemByIds = async (itemIds, page) => {
     const limit = 5;
     const skip = (page - 1) * limit;
-    const newItemIds = itemIds.slice(skip, skip+limit);
+    const newItemIds = itemIds.slice(skip, skip + limit);
     const items = [];
     await fetchItems(items, newItemIds);
     return items;
@@ -49,11 +55,11 @@ async function fetchItems(items, itemIds) {
 
 // export const getAllItemsByTag = async (tagId) => {
 //     const tag = await tagData.getTagById(tagId);
-    
+
 //     const itemIds = tag.relativeProduct;
-    
+
 //     const itemsData = getItemByIds(itemIds);
-    
+
 //     return itemsData;
 // };
 
@@ -98,7 +104,7 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
         throw error;
     }
     try {
-        for(let tagName of itemTags){
+        for (let tagName of itemTags) {
             await addItemToTags(newItemId, tagName);
         }
     } catch (error) {
@@ -109,7 +115,7 @@ export const addItem = async (ownerId, itemName, itemDesc, itemTags, itemPrice, 
 export const deleteRatingAndReview = async (userId, itemId) => {
     try {
         const isPresent = await isPresentRatingAndReview(userId, itemId);
-        if(!isPresent) return null;
+        if (!isPresent) return null;
         const item = await itemCollection.findOneAndUpdate(
             {
                 _id: new ObjectId(itemId),
@@ -137,8 +143,8 @@ export const deleteRatingAndReview = async (userId, itemId) => {
                         },
                         Avg_rating: {
                             $cond: [
-                                {$gt: [{$size: "$Reviews"}, 0]},
-                                {$round: [{$avg: "$Reviews.Rating"},1]},
+                                { $gt: [{ $size: "$Reviews" }, 0] },
+                                { $round: [{ $avg: "$Reviews.Rating" }, 1] },
                                 0
                             ]
                         }
@@ -148,7 +154,7 @@ export const deleteRatingAndReview = async (userId, itemId) => {
             {
                 returnDocument: "after"
             }
-        );        
+        );
         return item;
     } catch (error) {
         throw error;
@@ -156,13 +162,13 @@ export const deleteRatingAndReview = async (userId, itemId) => {
 };
 
 
-export const isPresentRatingAndReview = async(userId, itemId) => {
+export const isPresentRatingAndReview = async (userId, itemId) => {
     try {
         const item = await itemCollection.findOne({
             _id: new ObjectId(itemId),
-            Reviews: { $elemMatch: {UserId: new ObjectId(userId)}}
+            Reviews: { $elemMatch: { UserId: new ObjectId(userId) } }
         });
-        if(item) return true;
+        if (item) return true;
         return false;
     } catch (error) {
         throw error;
@@ -172,9 +178,9 @@ export const isPresentRatingAndReview = async(userId, itemId) => {
 export const addRatingAndReview = async (userId, itemId, rating, review) => {
     try {
         const isPresent = await isPresentRatingAndReview(userId, itemId);
-        if(!isPresent){
+        if (!isPresent) {
             const updateInfo = await itemCollection.findOneAndUpdate(
-                {_id: new ObjectId(itemId)},
+                { _id: new ObjectId(itemId) },
                 [
                     {
                         $set: {
@@ -182,15 +188,15 @@ export const addRatingAndReview = async (userId, itemId, rating, review) => {
                                 $round: [
                                     {
                                         $divide: [
-                                            {$add: ["$Sum_rating",rating]},
-                                            {$add: [{$size: "$Reviews"}, 1]}
+                                            { $add: ["$Sum_rating", rating] },
+                                            { $add: [{ $size: "$Reviews" }, 1] }
                                         ]
                                     },
                                     1
                                 ]
                             },
                             Sum_rating: { $add: ["$Sum_rating", rating] },
-                            Reviews: { 
+                            Reviews: {
                                 $concatArrays: [
                                     "$Reviews",
                                     [{ UserId: new ObjectId(userId), Review: review, Rating: rating }]
@@ -199,13 +205,13 @@ export const addRatingAndReview = async (userId, itemId, rating, review) => {
                         }
                     }
                 ],
-                {returnDocument: 'after'}
+                { returnDocument: 'after' }
             );
             return updateInfo;
-        }else{
+        } else {
             return null;
         }
-        
+
     } catch (error) {
         throw error;
     }
@@ -215,20 +221,35 @@ export const addTagToItem = async (tagName, itemId) => {
     try {
         const item = await itemCollection
             .findOne(
-                {_id: new ObjectId(itemId)},
-                {projection: {Tags: 1, _id: 0}}
+                { _id: new ObjectId(itemId) },
+                { projection: { Tags: 1, _id: 0 } }
             );
-        if(!item) throw "item not found.";
-        if(item.Tags.includes(tagName)){
+        if (!item) throw "item not found.";
+        if (item.Tags.includes(tagName)) {
             throw "tagName already exists.";
         }
         const updateInfo = await itemCollection.findOneAndUpdate(
-            {_id: new ObjectId(itemId)},
-            {$push: {Tags: tagName}},
-            {returnDocument: 'after'}
+            { _id: new ObjectId(itemId) },
+            { $push: { Tags: tagName } },
+            { returnDocument: 'after' }
         );
         await addItemToTags(itemId, tagName);
     } catch (error) {
         throw error;
     }
 };
+
+
+
+// export const addComment = async (itemId, comment) => {
+//     try {
+//         const updateInfo = await itemCollection.findOneAndUpdate(
+//             { _id: new ObjectId(itemId) },
+//             { $push: { Comment: comment } },
+//             { returnDocument: 'after' }
+//         );
+//         return updateInfo;
+//     } catch (error) {
+//         throw error;
+//     }
+// };

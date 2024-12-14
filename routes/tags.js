@@ -5,6 +5,17 @@ import * as itemData from "../data/items.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
+
+router.get("/allTags", async (req, res) => {
+  let allTags = await tagData.getAllTags();
+  if (allTags.length == 0) {
+      return res.status(404).json({ error: "No Tags Yet" });
+  } else {
+      res.render("tags", { title: "All Tags", tags: allTags, user: req.session.user });
+  }
+});
+
+
 /*
 XIAO
 Completed
@@ -13,11 +24,11 @@ Method : get
 @param body:Id(String)
 @return JSON Object{}
 */
-router.get("/tagId", async (req, res) => {
+router.get("/:id", async (req, res) => {
 
   try {
     //pre check
-    let tagId = req.body.tagId;
+    let tagId = req.params.id;
     validation.isProvided(tagId);
     tagId = validation.isValidString(tagId);
     validation.isValidObjectId(tagId);
@@ -26,7 +37,7 @@ router.get("/tagId", async (req, res) => {
     const tag = await tagData.getTagById(tagId);
 
     // return
-    return res.status(200).json(tag);
+    res.render("tag", { title: tag.TagName, tag: tag })
   } catch (error) {
     const errorMessage = error.message || error;
 
@@ -38,26 +49,26 @@ router.get("/tagId", async (req, res) => {
   }
 });
 
-router.get("/tagName", async (req, res) => {
-  let tagName = req.query.tagName;
-  let page = req.query.page? req.query.page: "1";
-  try {
-    validation.isProvided(tagName);
-    tagName = validation.isValidString(tagName);
-    page = await validation.isPageValidForTagName(tagName, page);
+// router.get("/tagName", async (req, res) => {
+//   let tagName = req.query.tagName;
+//   let page = req.query.page? req.query.page: "1";
+//   try {
+//     validation.isProvided(tagName);
+//     tagName = validation.isValidString(tagName);
+//     page = await validation.isPageValidForTagName(tagName, page);
    
-  } catch (error) {
-    return res.status(400).json({error: error});
-  }
-  try {
-    const itemIds = await tagData.getItemsByTag(tagName);
-    const ids = itemIds.map(item => item.ItemId);
-    const items = await itemData.getItemByIds(ids, page);
-    return res.json(items);
-  } catch (error) {
-    return res.status(404).json({error: error});
-  }
-});
+//   } catch (error) {
+//     return res.status(400).json({error: error});
+//   }
+//   try {
+//     const itemIds = await tagData.getItemsByTag(tagName);
+//     const ids = itemIds.map(item => item.ItemId);
+//     const items = await itemData.getItemByIds(ids, page);
+//     return res.json(items);
+//   } catch (error) {
+//     return res.status(404).json({error: error});
+//   }
+// });
 
 
 router.post("/tags", async (req, res) => {
@@ -76,14 +87,14 @@ router.post("/tags", async (req, res) => {
   }
 });
 
-router.get("/allTags",  async (req, res) => {
-  let allTags = await tagData.getAllTags();
-  if(allTags.length == 0){
-    return res.status(404).json({error: "No Tags Yet"});
-  }else{
-    return res.status(200).json(allTags);
-  }
-});
+// router.get("/allTags",  async (req, res) => {
+//   let allTags = await tagData.getAllTags();
+//   if(allTags.length == 0){
+//     return res.status(404).json({error: "No Tags Yet"});
+//   }else{
+//     return res.status(200).json(allTags);
+//   }
+// });
 
 router.post("/upvoteTags",  async (req, res) => {
   const { userId, itemId, tagId } = req.body;
