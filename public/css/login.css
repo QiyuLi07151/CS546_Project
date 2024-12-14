@@ -1,131 +1,132 @@
 body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+header {
+  background-color: #6200ea;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #6200ea;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+form {
+  background: white;
+  padding: 20px;
+  margin: 30px auto;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 90%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 10px 0;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3700b3;
+}
+
+a {
+  color: #6200ea;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.login_form {
+  text-align: center;
+  margin: 50px auto;
+}
+
+.login_form h1 {
+  font-size: 24px;
+  color: #6200ea;
+  margin-bottom: 20px;
+}
+
+.signup_form {
+  text-align: center;
+  margin: 50px auto;
+}
+
+.signup_form h1 {
+  font-size: 24px;
+  color: #6200ea;
+  margin-bottom: 20px;
+}
+
+.submit_button {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  form {
+    width: 90%;
   }
-  
-  header {
-    background-color: #6200ea;
-    color: white;
-    padding: 15px 20px;
-    text-align: center;
-  }
-  
+
+  header,
   footer {
     text-align: center;
-    padding: 10px 0;
-    background-color: #6200ea;
-    color: white;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
   }
-  
-  form {
-    background: white;
-    padding: 20px;
-    margin: 30px auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-  }
-  
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
-  }
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 90%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px 0;
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #3700b3;
-  }
-  
-  a {
-    color: #6200ea;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  .login_form {
-    text-align: center;
-    margin: 50px auto;
-  }
-  
-  .login_form h1 {
-    font-size: 24px;
-    color: #6200ea;
-    margin-bottom: 20px;
-  }
-  
-  .signup_form {
-    text-align: center;
-    margin: 50px auto;
-  }
-  
-  .signup_form h1 {
-    font-size: 24px;
-    color: #6200ea;
-    margin-bottom: 20px;
-  }
-  
-  .submit_button {
-    margin-top: 20px;
-  }
-  
-  @media (max-width: 600px) {
-    form {
-      width: 90%;
-    }
-    header,
-    footer {
-      text-align: center;
-    }
-  }
-  /* Tooltip styles */
-  .tooltip {
-    color: #555;
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  /* Error message styles */
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  /* Success message styles */
-  .success-message {
-    color: green;
-    margin-top: 10px;
-  }
-  
+}
+
+/* Tooltip styles */
+.tooltip {
+  color: #555;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Error message styles */
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Success message styles */
+.success-message {
+  color: green;
+  margin-top: 10px;
+}

@@ -121,58 +121,58 @@ router.get("/userId", async (req, res) => {
 
 
 
-router.route("/login")
-  .get(async (req, res) => {
-    res.render('login', { title: 'Login' });
-  })
-  .post(async (req, res) => {
-    const { username, password } = req.body;
-    try {
-      const user = await userData.getUserByName(username);
+// router.route("/login")
+//   .get(async (req, res) => {
+//     res.render('login', { title: 'Login' });
+//   })
+//   .post(async (req, res) => {
+//     const { username, password } = req.body;
+//     try {
+//       const user = await userData.getUserByName(username);
 
-      if (!user) {
-        throw 'Invalid username or password';
-      }
+//       if (!user) {
+//         throw 'Invalid username or password';
+//       }
 
-      const isValidPassword = await bcrypt.compare(password, user.Password);
+//       const isValidPassword = await bcrypt.compare(password, user.Password);
 
-      if (!isValidPassword) {
-        throw 'Invalid username or password';
-      }
+//       if (!isValidPassword) {
+//         throw 'Invalid username or password';
+//       }
 
-      req.session.user = user;
-      res.redirect('/user');
-    } catch (e) {
-      res.status(400).render('login', { title: 'Login', error: e });
-    }
-  });
+//       req.session.user = user;
+//       res.redirect('/user');
+//     } catch (e) {
+//       res.status(400).render('login', { title: 'Login', error: e });
+//     }
+//   });
 
 
-router.route('/register')
-  .get(async (req, res) => {
-    res.render('signup', { title: 'Register' });
-  })
-  .post(async (req, res) => {
-    const { username, password, IsOwner } = req.body;
+// router.route('/register')
+//   .get(async (req, res) => {
+//     res.render('signup', { title: 'Register' });
+//   })
+//   .post(async (req, res) => {
+//     const { username, password, IsOwner } = req.body;
 
-    try {
-      let user = await userData.getUserByName(username);
+//     try {
+//       let user = await userData.getUserByName(username);
 
-      if (user) {
-        throw 'User already exists';
-      }
+//       if (user) {
+//         throw 'User already exists';
+//       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+//       const hashedPassword = await bcrypt.hash(password, 10);
 
-      await userData.addUser(username, hashedPassword, IsOwner);
+//       await userData.addUser(username, hashedPassword, IsOwner);
 
-      user = await userData.getUserByName(username);
-      req.session.user = user;
-      res.redirect('/user');
-    } catch (e) {
-      res.status(400).render('signup', { title: 'Register', error: e });
-    }
-  });
+//       user = await userData.getUserByName(username);
+//       req.session.user = user;
+//       res.redirect('/user');
+//     } catch (e) {
+//       res.status(400).render('signup', { title: 'Register', error: e });
+//     }
+//   });
 
 
 
