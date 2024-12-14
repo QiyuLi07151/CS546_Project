@@ -54,9 +54,12 @@ router.post('/login', async (req, res) => {
       throw 'Invalid username or password';
     }
 
-    req.session.user = user;
-    const role = user.IsOwner ? 'Buyer' : 'Seller';
-    res.status(200).json({ message: 'Login Successful-' + role , role : role});
+    req.session.user = {
+      _id: user._id,
+      IsOwner: user.IsOwner
+    };
+    const role = user.IsOwner ? 'Seller' : 'Buyer';
+    res.status(200).json({ message: 'Login Successful-' + role, role: role });
   } catch (e) {
     res.status(400).json({ error: e });
   }
@@ -92,7 +95,7 @@ router.post("/updateFavoriteItem", async (req, res) => {
     itemId = validation.isValidString(itemId);
     validation.isValidObjectId(itemId);
     const result = await userData.updateFavoriteItem(userId, itemId);
-    if(!result) return res.status(404).json({error: "Either userId or itemId not found."});
+    if (!result) return res.status(404).json({ error: "Either userId or itemId not found." });
     return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json({ error: error });
@@ -105,21 +108,37 @@ router.get("/userId/wishlist", async (req, res) => {
     validation.isProvided(userId);
     userId = validation.isValidString(userId);
     validation.isValidObjectId(userId);
- 
+
     const user = await userData.getUserById(userId);
 
     const wishlistItems = [];
     for (const itemId of user.Wishlist) {
-        const item = await itemData.getItemById(itemId);
-        if (item) {
-            wishlistItems.push(item);
-        }
+      const item = await itemData.getItemById(itemId);
+      if (item) {
+        wishlistItems.push(item);
+      }
     }
 
     res.json(wishlistItems);
 
   } catch (e) {
     res.status(400).json({ error: e });
+  }
+});
+
+router.get('/currentUserId', (req, res) => {
+  if (req.session.user) {
+    res.json({ userId: req.session.user._id.toString() });
+  } else {
+    res.status(401).json({ error: 'not logged in' });
+  }
+});
+
+router.get('/currentUserIsOwner', (req, res) => {
+  if (req.session.user) {
+    res.json({ isOwner: req.session.user.IsOwner });
+  } else {
+    res.status(401).json({ error: 'not logged in' });
   }
 });
 

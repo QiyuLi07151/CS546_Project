@@ -33,6 +33,9 @@ const constructorMethod = (app) => {
   app.get('/listing.html', (req, res) => {
     res.sendFile(path.resolve('./static/listing.html'));
   });
+  app.get('/addItem.html', (req, res) => {
+    res.sendFile(path.resolve('./static/addItem.html'));
+  });
   app.get('/login.html', (req, res) => {
     res.redirect('/');
   });

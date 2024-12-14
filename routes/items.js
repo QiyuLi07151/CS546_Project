@@ -7,7 +7,7 @@ import * as validation from "../helpers.js";
 
 router.get("/", async (req, res) => {
     try {
-        let page = req.query.page? req.query.page: "1";
+        let page = req.query.page ? req.query.page : "1";
         page = await validation.isPageValid(req.query.page);
         validation.isProvided(page);
         const itemList = await itemData.getAllItems(page);
@@ -48,26 +48,19 @@ router.patch("/addTagToItem", async (req, res) => {
         tagName = validation.isValidString(tagName);
         validation.isValidObjectId(itemId);
     } catch (error) {
-        return res.status(400).json({error: error});
+        return res.status(400).json({ error: error });
     }
     try {
         await itemData.addTagToItem(tagName, itemId);
         return res.status(200).json();
     } catch (error) {
-        return res.status(404).json({error: error});
+        return res.status(404).json({ error: error });
     }
 });
 
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
     const data = req.body;
-    if (!data || Object.keys(data).length === 0)
-        return res.status(400).json({ error: 'There are no fields in the request body.' });
-    try {
-        validation.isValidAddItemFuncData(data);
-    } catch (error) {
-        return res.status(400).json({ error: error });
-    }
     let {
         ownerId,
         itemName,
@@ -77,11 +70,42 @@ router.post("/addItem", async (req, res) => {
         itemImg,
         itemStatus
     } = data;
+    console.log("data:" + data);
+    console.log("ownerId:" + ownerId);
+    console.log("itemName:" + itemName);
+    console.log("itemDesc:" + itemDesc);
+    console.log("itemTags:" + itemTags);
+    console.log("itemPrice:" + itemPrice);
+    console.log("itemImg:" + itemImg);
+    console.log("itemStatus5:" + itemStatus);
+    console.log("typeof:" + typeof data.itemStatus);
+    console.log("typeof:" + typeof req.body.itemStatus);
+    if (!data || Object.keys(data).length === 0)
+        return res.status(400).json({ error: 'There are no fields in the request body.' });
+    try {
+        validation.isValidAddItemFuncData(data);
+    } catch (error) {
+        return res.status(400).json({ error: error });
+    }
+    // let {
+    //     ownerId,
+    //     itemName,
+    //     itemDesc,
+    //     itemTags,
+    //     itemPrice,
+    //     itemImg,
+    //     itemStatus
+    // } = data;
+    console.log("itemStatus3:" + itemStatus);
+    let user = req.session.user;
+    ownerId = new ObjectId(user._id);
+    // itemStatus = itemStatus ? true : false;
+    console.log("itemStatus4:" + itemStatus);
     try {
         validation.isProvided(ownerId);
         validation.isProvided(itemName);
         validation.isProvided(itemDesc);
-        if(itemDesc.length > 150){
+        if (itemDesc.length > 150) {
             throw "Item description should be less than 150 characters.";
         }
         validation.isProvided(itemTags);
@@ -124,19 +148,19 @@ router.patch("/modifyReviewAndRating", async (req, res) => {
         validation.isValidObjectId(userId);
         validation.isValidObjectId(itemId);
         validation.isValidNumber(parseInt(rating));
-        if(parseInt(rating) > 5)
+        if (parseInt(rating) > 5)
             throw "Rating could more than 5.";
     } catch (error) {
         return res.status(400).json({ error: error });
     }
     try {
         const item = await itemData.isPresentRatingAndReview(userId, itemId);
-        if(!item) return res.status(404).json({error: "not found"});
+        if (!item) return res.status(404).json({ error: "not found" });
         await itemData.deleteRatingAndReview(userId, itemId);
         const updateItem = await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
         return res.status(200).json(updateItem);
     } catch (error) {
-        return res.status(500).json({error: error});
+        return res.status(500).json({ error: error });
     }
 });
 
@@ -154,14 +178,14 @@ router.patch("/deleteReviewAndRating", async (req, res) => {
         validation.isValidObjectId(userId);
         validation.isValidObjectId(itemId);
     } catch (error) {
-        return res.status(400).json({error: error});
+        return res.status(400).json({ error: error });
     }
     try {
         const item = await itemData.deleteRatingAndReview(userId, itemId);
-        if(!item) return res.status(404).json({error: "not Found"});
+        if (!item) return res.status(404).json({ error: "not Found" });
         return res.status(200).json(item);
     } catch (error) {
-        return res.status(500).json({error: error});
+        return res.status(500).json({ error: error });
     }
 });
 
@@ -183,14 +207,14 @@ router.patch("/addReviewAndRating", async (req, res) => {
         validation.isValidObjectId(userId);
         validation.isValidObjectId(itemId);
         validation.isValidNumber(parseInt(rating));
-        if(parseInt(rating) > 5)
+        if (parseInt(rating) > 5)
             throw "Rating could more than 5.";
     } catch (error) {
         return res.status(400).json({ error: error });
     }
     try {
         const item = await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
-        if(!item) return res.status(400).json({error: "You have left a review, do you want to modify it?"});
+        if (!item) return res.status(400).json({ error: "You have left a review, do you want to modify it?" });
         return res.json(item);
     } catch (error) {
         return res.status(500).json({ error: error });
