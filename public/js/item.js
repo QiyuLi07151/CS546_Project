@@ -11,6 +11,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         let item = await response.json();
 
+        const userName = localStorage.getItem("username");
+
+        let userId;
+        const responseId = await fetch("/user/getUserIdByName?userName=" + userName, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (responseId.ok) {
+            let data = await responseId.json();
+            userId = data.userId;
+            // console.log(userId);
+        } else {
+            console.error('Failed to fetch user ID:', responseId.statusText);
+        }
+
+        const reviewForm = document.getElementById('reviewForm');
+        reviewForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const review = document.getElementById('review').value;
+            const rating = document.getElementById('rating').value;
+
+            const payload = {
+                userId,
+                itemId,
+                review,
+                rating
+            };
+
+            try {
+                const response = await fetch('/item/addReviewAndRating', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('make a review successfully');
+                    
+                } else {
+                    const error = await response.json();
+                    alert(`make review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('There is a error when you make a review:', error);
+                
+            }
+        });
+
+
         const itemImageDiv = document.getElementById('item_image');
         if (item.Image) {
             let itemImage = document.createElement('img');
@@ -36,6 +92,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             tagLink.href = `/tag/tagName?tagName=${tag}`;
             itemTagsDiv.appendChild(tagLink);
         });
+
+        let make_review_rating = document.getElementById("make_review_rating");
+        make_review_rating.hidden = false;
+        if (localStorage.getItem("role") == "Seller") {
+            make_review_rating.hidden = true;
+        }
+        else if (localStorage.getItem("role") == "Buyer") {
+            // if buyer already left a review
+
+            const params = new URLSearchParams({ itemId, userName });
+
+            let queryUser = `/user/isMadeReview?${params.toString()}`;
+            const userResponse = await fetch(queryUser, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = await userResponse.json();
+            // console.log(res);
+
+            if (res.isMadeReview) {
+                make_review_rating.hidden = true;
+            }
+        }
+
+
+
+
+
+
 
         const reviewsList = document.getElementById('reviews_list');
         for (const review of item.Reviews) {
@@ -93,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewsList.appendChild(reviewLi);
         }
 
-      
+
         function createStars(rating) {
             let fullStar = '<span class="star filled">★</span>';
             let emptyStar = '<span class="star">☆</span>';

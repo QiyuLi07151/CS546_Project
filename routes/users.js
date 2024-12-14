@@ -126,6 +126,7 @@ router.get("/userId/wishlist", async (req, res) => {
   }
 });
 
+
 router.get('/currentUserId', (req, res) => {
   if (req.session.user) {
     res.json({ userId: req.session.user._id.toString() });
@@ -141,5 +142,46 @@ router.get('/currentUserIsOwner', (req, res) => {
     res.status(401).json({ error: 'not logged in' });
   }
 });
+
+router.get('/isMadeReview', async (req, res) => {
+  const { itemId, userName } = req.query;
+  try {
+    validation.isProvided(itemId);
+    validation.isValidString(itemId);
+    validation.isValidObjectId(itemId);
+    validation.isProvided(userName);
+    validation.isValidString(userName);
+  } catch (e) {
+    return res.status(400).json({ error: e });
+  }
+  try {
+    const user = await userData.getUserByName(userName);
+    const userId = user._id;
+    const item = await itemData.getItemById(itemId);
+    const hasReviewed = item.Reviews.some(review => review.UserId.equals(userId));
+
+    return res.status(200).json({ isMadeReview: hasReviewed });
+  } catch (e) {
+    return res.status(404).json({ error: e });
+  }
+})
+router.get('/getUserIdByName', async (req, res) => {
+  const userName = req.query.userName;
+  try {
+    validation.isProvided(userName);
+    validation.isValidString(userName);
+  } catch (e) {
+    return res.status(400).json({ error: e });
+  }
+  try {
+    const user = await userData.getUserByName(userName);
+    const userId = user._id;
+
+
+    return res.status(200).json({ userId: userId.toString() });
+  } catch (e) {
+    return res.status(404).json({ error: e });
+  }
+})
 
 export default router;
