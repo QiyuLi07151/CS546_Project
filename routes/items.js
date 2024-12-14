@@ -98,7 +98,7 @@ router.post("/addItem", async (req, res) => {
     // } = data;
     console.log("itemStatus3:" + itemStatus);
     let user = req.session.user;
-    ownerId = new ObjectId(user._id);
+    // ownerId = new ObjectId(user._id);
     // itemStatus = itemStatus ? true : false;
     console.log("itemStatus4:" + itemStatus);
     try {
