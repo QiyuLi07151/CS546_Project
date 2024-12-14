@@ -40,7 +40,7 @@ header {
 
 .nav_bar a {
     float: left;
-    display: block;
+    /* display: block; */
     color: white;
     text-align: center;
     padding: 14px 16px;
