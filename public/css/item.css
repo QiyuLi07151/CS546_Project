@@ -74,18 +74,18 @@ header {
 
 /* Updated item description styling */
 .item_desc {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #555; /* Gray text */
-    word-wrap: break-word; /* Force breaking words that are too long */
-    overflow-wrap: break-word; /* Break long words to fit the width */
-    white-space: normal; /* Allow wrapping */
-    overflow: visible; /* Ensure all content is visible */
-    text-overflow: clip; /* No ellipsis */
-    max-width: 100%; /* Ensure it stays within the parent container */
-    padding: 5px;
-  }
-  
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555; /* Gray text */
+  word-wrap: break-word; /* Force breaking words that are too long */
+  overflow-wrap: break-word; /* Break long words to fit the width */
+  white-space: normal; /* Allow wrapping */
+  overflow: visible; /* Ensure all content is visible */
+  text-overflow: clip; /* No ellipsis */
+  max-width: 100%; /* Ensure it stays within the parent container */
+  padding: 5px;
+}
+
 .item_desc p {
   overflow: visible;
   text-overflow: ellipsis;
@@ -240,4 +240,11 @@ header {
 .toggle_button:hover {
   background: #007bff; /* Blue background on hover */
   color: #ffffff; /* White text on hover */
+}
+.rating_value {
+  font-size: 14px; 
+  font-weight: bold; 
+  color: #007bff; 
+  margin-left: 8px; 
+  /* vertical-align: middle;  */
 }

@@ -97,7 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (response.ok) {
                 localStorage.setItem('username', username);
+                localStorage.setItem('role', data.role);
                 alert(data.message);
+                
                 window.location.href = '/';
             } else {
                 displayError(loginForm, data.error || 'Login failed. Please try again.');

@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         let query = new URLSearchParams(window.location.search);
@@ -13,7 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         let item = await response.json();
 
-     
         const itemImageDiv = document.getElementById('item_image');
         if (item.Image) {
             let itemImage = document.createElement('img');
@@ -40,13 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             itemTagsDiv.appendChild(tagLink);
         });
 
-    
         const reviewsList = document.getElementById('reviews_list');
         for (const review of item.Reviews) {
             let reviewLi = document.createElement('li');
             reviewLi.classList.add('review_item');
 
-         
             let queryUser = `/user/userId?userId=${review.UserId}`;
             const userResponse = await fetch(queryUser, {
                 method: 'GET',
@@ -64,33 +59,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewContentDiv.classList.add('review_content');
             reviewContentDiv.textContent = review.Review;
 
-          
-            if (review.Review.length > 50) {
-                reviewContentDiv.style.maxHeight = '60px'; 
-                reviewContentDiv.style.overflow = 'hidden';
-                reviewContentDiv.style.transition = 'max-height 0.3s ease';
+            reviewContentDiv.style.maxHeight = '60px';
+            reviewContentDiv.style.overflow = 'hidden';
 
-                let toggleButton = document.createElement('button');
-                toggleButton.classList.add('toggle_button');
-                toggleButton.textContent = 'Read more';
+            requestAnimationFrame(() => {
+                if (reviewContentDiv.scrollHeight > reviewContentDiv.clientHeight) {
+                    let toggleButton = document.createElement('button');
+                    toggleButton.classList.add('toggle_button');
+                    toggleButton.textContent = 'Read more';
 
-                toggleButton.addEventListener('click', () => {
-                    if (reviewContentDiv.style.maxHeight === '60px') {
-                        reviewContentDiv.style.maxHeight = 'none'; 
-                        toggleButton.textContent = 'Read less';
-                    } else {
-                        reviewContentDiv.style.maxHeight = '60px'; 
-                        toggleButton.textContent = 'Read more';
-                    }
-                });
+                    toggleButton.addEventListener('click', () => {
+                        if (reviewContentDiv.style.maxHeight === '60px') {
+                            reviewContentDiv.style.maxHeight = 'none';
+                            toggleButton.textContent = 'Read less';
+                        } else {
+                            reviewContentDiv.style.maxHeight = '60px';
+                            toggleButton.textContent = 'Read more';
+                        }
+                    });
 
-                reviewLi.appendChild(toggleButton);
-            }
+                    reviewLi.appendChild(toggleButton);
+                }
+            });
 
-            
             let ratingDiv = document.createElement('div');
             ratingDiv.classList.add('review_rating');
-            ratingDiv.innerHTML = createStars(review.Rating);
+            ratingDiv.innerHTML = createStars(review.Rating) + `<span class="rating_value">${review.Rating}</span>`;
+
 
             reviewLi.appendChild(userIdDiv);
             reviewLi.appendChild(reviewContentDiv);
@@ -98,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewsList.appendChild(reviewLi);
         }
 
-        // 生成星星评分的函数
+      
         function createStars(rating) {
             let fullStar = '<span class="star filled">★</span>';
             let emptyStar = '<span class="star">☆</span>';

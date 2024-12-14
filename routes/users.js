@@ -54,8 +54,9 @@ router.post('/login', async (req, res) => {
       throw 'Invalid username or password';
     }
 
-    req.session.user = user
-    res.status(200).json({ message: 'Login Successful' });
+    req.session.user = user;
+    const role = user.IsOwner ? 'Buyer' : 'Seller';
+    res.status(200).json({ message: 'Login Successful-' + role , role : role});
   } catch (e) {
     res.status(400).json({ error: e });
   }
