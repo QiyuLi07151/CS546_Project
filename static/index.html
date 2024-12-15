@@ -1,53 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main Page</title>
-    <link rel="stylesheet" href="../public/css/main.css" />
-  </head>
 
-  <body>
-    <div class="login">
-      <a id="login_button" class="login_button" href="login.html">Login</a>
-      <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
-      <a id="current_user" class="current_user" hidden>Username</a>
-      <button id="logout_button" class="logout_button" hidden>Logout</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Page</title>
+  <link rel="stylesheet" href="../public/css/main.css" />
+</head>
+
+<body>
+  <div class="login">
+    <a id="login_button" class="login_button" href="login.html">Login</a>
+    <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
+    <a id="current_user" class="current_user" hidden>Username</a>
+    <button id="logout_button" class="logout_button" hidden>Logout</button>
+  </div>
+
+  <header>
+    <h1>Place Holder Title</h1>
+  </header>
+
+  <div class="nav_bar">
+    <a class="current_page" href="index.html">Home</a>
+    <a class="page" href="search.html">Search</a>
+    <a class="page" href="tags.html">Search By Tag</a>
+    <a id="add_item" class="page" href="addItem.html" hidden>addItem</a>
+  </div>
+
+  <div class="ad-carousel">
+    <div class="ad-images" id="adImages">
     </div>
-
-    <header>
-      <h1>Place Holder Title</h1>
-    </header>
-
-    <div class="nav_bar">
-      <a class="current_page" href="index.html">Home</a>
-      <a class="page" href="search.html">Search</a>
-      <a class="page" href="tags.html">Search By Tag</a>
-      <a id="add_item" class="page" href="addItem.html" hidden>addItem</a>
+    <div class="ad-dots" id="adDots">
     </div>
+  </div>
 
-    <div class="ad-carousel">
-      <div class="ad-images">
-        <img src="../public/images/ad1.jpg" alt="Ad 1" class="ad-slide" />
-        <img src="../public/images/ad2.jpg" alt="Ad 2" class="ad-slide" />
-        <img src="../public/images/ad3.jpg" alt="Ad 3" class="ad-slide" />
-      </div>
-      <div class="ad-dots">
-        <span class="ad-dot active"></span>
-        <span class="ad-dot"></span>
-        <span class="ad-dot"></span>
-      </div>
-    </div>
+  <div class="tag-search-container">
+    <label for="tagInput">Search Tags:</label>
+    <input type="text" id="tagInput" placeholder="Type to search tags..." />
+    <ul id="tagSuggestions" class="suggestions-list"></ul>
+  </div>
 
-    <div class="tag-search-container">
-      <label for="tagInput">Search Tags:</label>
-      <input type="text" id="tagInput" placeholder="Type to search tags..." />
-      <ul id="tagSuggestions" class="suggestions-list"></ul>
-    </div>
+  <footer></footer>
+  <script src="../public/js/main.js"></script>
+  <script src="../public/js/adCarousel.js"></script>
+</body>
 
-    <footer></footer>
-    <script src="../public/js/main.js"></script>
-    <script src="../public/js/adCarousel.js"></script>
-  </body>
 </html>
-
