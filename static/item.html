@@ -80,6 +80,27 @@
       </div>
     </div>
 
+    
+    <div id="editModal" class="modal">
+      <div class="modal_content">
+        <button id="closeModalBtn" class="modal_close_btn">×</button>
+        <h3>Edit Review</h3>
+
+        <form id="editReviewForm">
+          <label for="editTextarea">Review:</label><br />
+          <textarea id="editTextarea" rows="4" cols="50"></textarea>
+          <br /><br />
+
+          <label for="editRating">Rating:</label><br />
+          <input type="number" id="editRating" min="1.0" max="5.0" step="0.1" />
+          <br /><br />
+
+          <button type="button" id="submitEditBtn">Submit</button>
+          <button type="button" id="deleteReviewBtn">Delete</button>
+        </form>
+      </div>
+    </div>
+
     <footer></footer>
     <script src="../public/js/item.js"></script>
   </body>

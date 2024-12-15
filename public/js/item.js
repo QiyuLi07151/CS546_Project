@@ -80,7 +80,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const review = document.getElementById('review').value;
             const rating = document.getElementById('rating').value;
-
+            // 新增检测rating是否超过5.0
+            if (parseFloat(rating) > 5) {
+                alert('Rating cannot exceed 5.0');
+                return; // 直接停止后续操作
+            }
             const payload = {
                 userId,
                 itemId,
@@ -100,6 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (response.ok) {
                     const result = await response.json();
                     alert('make a review successfully');
+                    location.reload();
 
                 } else {
                     const error = await response.json();
@@ -224,7 +229,94 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const editReviewForm = document.getElementById('editReviewForm');
+        const editTextarea = document.getElementById('editTextarea');
+        const editRating = document.getElementById('editRating');
+        const submitEditBtn = document.getElementById('submitEditBtn');
+        const deleteReviewBtn = document.getElementById('deleteReviewBtn');
 
+        
+        function closeModal() {
+            editModal.style.display = 'none';
+        }
+
+       
+        closeModalBtn.addEventListener('click', closeModal);
+
+   
+        window.addEventListener('click', (event) => {
+            if (event.target === editModal) {
+                closeModal();
+            }
+        });
+
+        let currentReviewPayload = { userId, itemId };
+     
+        submitEditBtn.addEventListener('click', async () => {
+            const review = editTextarea.value;
+            const rating = editRating.value;
+
+            if (parseFloat(rating) > 5) {
+                alert('Rating cannot exceed 5.0');
+                return; 
+            }
+
+         
+            const payload = {
+                userId: currentReviewPayload.userId,
+                itemId: currentReviewPayload.itemId,
+                review,
+                rating
+            };
+
+            try {
+                const response = await fetch('/item/modifyReviewAndRating', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Edit review successfully');
+                    closeModal();    
+                    location.reload(); 
+                } else {
+                    const error = await response.json();
+                    alert(`Edit review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error editing review:', error);
+            }
+        });
+        deleteReviewBtn.addEventListener('click', async () => {
+           
+            const payload = {
+                userId: currentReviewPayload.userId,
+                itemId: currentReviewPayload.itemId
+               
+            };
+
+            try {
+                const response = await fetch('/item/deleteReviewAndRating', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Delete review successfully');
+                    closeModal();  
+                    location.reload(); 
+                } else {
+                    const error = await response.json();
+                    alert(`Delete review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting review:', error);
+            }
+        });
 
         const reviewsList = document.getElementById('reviews_list');
         for (const review of item.Reviews) {
@@ -273,15 +365,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let ratingDiv = document.createElement('div');
             ratingDiv.classList.add('review_rating');
-            ratingDiv.innerHTML = createStars(review.Rating) + `<span class="rating_value">${review.Rating}</span>`;
-
+            ratingDiv.innerHTML = createStars(review.Rating) +
+                `<span class="rating_value">${review.Rating}</span>`;
 
             reviewLi.appendChild(userIdDiv);
             reviewLi.appendChild(reviewContentDiv);
             reviewLi.appendChild(ratingDiv);
+
+            if (review.UserId === userId) {
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Edit';
+                editBtn.classList.add('edit_button');
+                editBtn.addEventListener('click', () => {
+                   
+                    editModal.style.display = 'block';
+
+                    
+                    editTextarea.value = review.Review;
+                    editRating.value = review.Rating;
+
+                    
+                });
+
+                reviewLi.appendChild(editBtn);
+            }
+
             reviewsList.appendChild(reviewLi);
         }
-
 
         function createStars(rating) {
             let fullStar = '<span class="star filled">★</span>';

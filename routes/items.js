@@ -164,7 +164,7 @@ router.patch("/modifyReviewAndRating", async (req, res) => {
     }
 });
 
-router.patch("/deleteReviewAndRating", async (req, res) => {
+router.delete("/deleteReviewAndRating", async (req, res) => {
     const data = req.body;
     let {
         userId,
