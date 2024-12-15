@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (responseId.ok) {
             let data = await responseId.json();
             userId = data.userId;
-            // console.log(userId);
         } else {
             console.error('Failed to fetch user ID:', responseId.statusText);
         }
@@ -55,14 +54,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (response.ok) {
                     const result = await response.json();
                     alert('make a review successfully');
-                    
+
                 } else {
                     const error = await response.json();
                     alert(`make review failed: ${error.error}`);
                 }
             } catch (error) {
                 console.error('There is a error when you make a review:', error);
-                
+
             }
         });
 
@@ -86,12 +85,69 @@ document.addEventListener('DOMContentLoaded', async () => {
         itemDescDiv.appendChild(itemDesc);
 
         const itemTagsDiv = document.getElementById('item_tags');
-        item.Tags.forEach(tag => {
+        item.Tags.forEach(async tag => {
+
+            let responseTag = await fetch('/tag/tags', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tagName: tag }),
+            });
+
+            let tagData = await responseTag.json();
+
+            let targetTagName = tagData.find(t => t.TagName === tag);
+            let tagId = targetTagName ? targetTagName._id : null;
+
+            let responseUpVote = await fetch('/tag/currentUpvote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, itemId, tagId }),
+            });
+            let voteData = await responseUpVote.json();
+            let upvoteCount = voteData.message.UpvoteCount;
+            let hasUpvoted = voteData.hasUpvoted;
+
+            let tagElement = document.createElement('div');
+            tagElement.className = 'tag-item';
+
             let tagLink = document.createElement('a');
-            tagLink.textContent = tag;
+            tagLink.textContent = `${tag} (${upvoteCount})`;
             tagLink.href = `/tag/tagName?tagName=${tag}`;
-            itemTagsDiv.appendChild(tagLink);
+            tagElement.appendChild(tagLink);
+
+            let voteButton = document.createElement('button');
+            updateVoteButton(voteButton, hasUpvoted);
+
+            voteButton.addEventListener('click', async () => {
+                let response = await fetch('/tag/upvoteTags', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, itemId, tagId }),
+                });
+                let newVoteData = await response.json();
+                upvoteCount = newVoteData.message.UpvoteCount;
+                hasUpvoted = newVoteData.hasUpvoted;
+
+                tagLink.textContent = `${tag} (${upvoteCount})`;
+                updateVoteButton(voteButton, hasUpvoted);
+            });
+
+            tagElement.appendChild(voteButton);
+            itemTagsDiv.appendChild(tagElement);
+            // let tagLink = document.createElement('a');
+            // tagLink.textContent = tag;
+            // tagLink.href = `/tag/tagName?tagName=${tag}`;
+            // itemTagsDiv.appendChild(tagLink);
         });
+
+        function updateVoteButton(button, hasUpvoted) {
+            button.textContent = hasUpvoted ? 'hasUpvoted' : 'hasNotUpvoted';
+            button.className = hasUpvoted ? 'upvoted' : 'not-upvoted';
+        }
 
         let make_review_rating = document.getElementById("make_review_rating");
         make_review_rating.hidden = false;

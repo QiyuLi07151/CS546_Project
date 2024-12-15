@@ -70,16 +70,16 @@ router.post("/addItem", async (req, res) => {
         itemImg,
         itemStatus
     } = data;
-    console.log("data:" + data);
-    console.log("ownerId:" + ownerId);
-    console.log("itemName:" + itemName);
-    console.log("itemDesc:" + itemDesc);
-    console.log("itemTags:" + itemTags);
-    console.log("itemPrice:" + itemPrice);
-    console.log("itemImg:" + itemImg);
-    console.log("itemStatus5:" + itemStatus);
-    console.log("typeof:" + typeof data.itemStatus);
-    console.log("typeof:" + typeof req.body.itemStatus);
+    // console.log("data:" + data);
+    // console.log("ownerId:" + ownerId);
+    // console.log("itemName:" + itemName);
+    // console.log("itemDesc:" + itemDesc);
+    // console.log("itemTags:" + itemTags);
+    // console.log("itemPrice:" + itemPrice);
+    // console.log("itemImg:" + itemImg);
+    // console.log("itemStatus5:" + itemStatus);
+    // console.log("typeof:" + typeof data.itemStatus);
+    // console.log("typeof:" + typeof req.body.itemStatus);
     if (!data || Object.keys(data).length === 0)
         return res.status(400).json({ error: 'There are no fields in the request body.' });
     try {
@@ -96,11 +96,11 @@ router.post("/addItem", async (req, res) => {
     //     itemImg,
     //     itemStatus
     // } = data;
-    console.log("itemStatus3:" + itemStatus);
+    // console.log("itemStatus3:" + itemStatus);
     let user = req.session.user;
     // ownerId = new ObjectId(user._id);
     // itemStatus = itemStatus ? true : false;
-    console.log("itemStatus4:" + itemStatus);
+    // console.log("itemStatus4:" + itemStatus);
     try {
         validation.isProvided(ownerId);
         validation.isProvided(itemName);

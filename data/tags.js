@@ -120,6 +120,12 @@ export const upvoteTags = async (userId, itemId, tagId) => {
       throw 'Failed to upvote tag';
     }
 
+    let newTag = await tagsCollection.findOne(
+      { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) }
+    );
+    if (!newTag) return false;
+    let item = newTag.RelativeItem.find(item => item.ItemId.equals(new ObjectId(itemId)));
+
     const userResult = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       { $addToSet: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
@@ -129,7 +135,7 @@ export const upvoteTags = async (userId, itemId, tagId) => {
       throw 'Failed to update user\'s upvoted tags';
     }
 
-    return { message: 'Tag upvoted successfully' };
+    return { message: item, hasUpvoted: !hasUpvoted };
   }
   if (hasUpvoted) {
     const tagResult = await tagsCollection.updateOne(
@@ -144,6 +150,12 @@ export const upvoteTags = async (userId, itemId, tagId) => {
       throw 'Failed to remove upvote tag';
     }
 
+    let newTag = await tagsCollection.findOne(
+      { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) }
+    );
+    if (!newTag) return false;
+    let item = newTag.RelativeItem.find(item => item.ItemId.equals(new ObjectId(itemId)));
+
     const userResult = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       { $pull: { UpvoteTags: { ItemId: new ObjectId(itemId), TagId: new ObjectId(tagId) } } }
@@ -153,6 +165,17 @@ export const upvoteTags = async (userId, itemId, tagId) => {
       throw 'Failed to update user\'s upvoted tags';
     }
 
-    return { message: 'Tag upvote removed successfully' };
+    return { message: item, hasUpvoted: !hasUpvoted };
   }
 };
+
+export const currentUpvote = async (userId, itemId, tagId) => {
+  const hasUpvoted = await checkUserUpvoted(userId, itemId, tagId);
+  let newTag = await tagsCollection.findOne(
+    { _id: new ObjectId(tagId), "RelativeItem.ItemId": new ObjectId(itemId) }
+  );
+  if (!newTag) return false;
+  let item = newTag.RelativeItem.find(item => item.ItemId.equals(new ObjectId(itemId)));
+  return { message: item, hasUpvoted: hasUpvoted };
+};
+
