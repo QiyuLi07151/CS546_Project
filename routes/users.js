@@ -333,14 +333,9 @@ router.post("/addAd", async (req, res) => {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    const result = await adsCollection.insertOne({
-      Image,
-      ItemName,
-      Title,
-      Description
-    });
+    let ad = await adData.addAd(Image, ItemName, Title, Description);
 
-    res.status(201).json({ message: "Advertisement added successfully", id: result.insertedId });
+    res.status(200).json({ message: "Advertisement added successfully", id: ad._id.toString() });
   } catch (error) {
     console.error("Error adding advertisement:", error);
     res.status(500).json({ error: "Failed to add advertisement." });

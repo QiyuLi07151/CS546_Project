@@ -24,7 +24,7 @@ export const getAdById = async (adId) => {
     return ad;
 };
 
-export const addad = async (Image, ItemName, Title, Description) => {
+export const addAd = async (Image, ItemName, Title, Description) => {
     if (!Image || !ItemName || !Title || !Description) {
         return res.status(400).json({ error: "All fields are required." });
     }
