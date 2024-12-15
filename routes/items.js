@@ -298,12 +298,12 @@ In progress
 router.post("/name", async (req, res) => {
     try {
         // pre check
-        let itemName = req.query.name;
+        let itemName = req.body.name;
         validation.isProvided(itemName);
         itemName = validation.isValidString(itemName);
 
         // get item by itemName
-        const items = await userData.getItemByName(itemName);
+        const items = await itemData.getItemByName(itemName);
 
 
 

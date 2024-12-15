@@ -48,25 +48,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         let query = new URLSearchParams(window.location.search);
-        if(query.has("itemName")){
+        if (query.has("itemName")) {
             let itemName = query.get("itemName");
-            let nameQuery = "/item/name?name=" + itemName;
-            const response = await fetch(nameQuery, {
-                method: 'GET',
+            let responseItems = await fetch('/item/name', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ name: itemName }),
             });
-            let items = await response.json();
+            let items = await responseItems.json();
             let searchList = document.getElementById("search_results");
-            for(let n = 0; n < items.length; n++){
+            for (let n = 0; n < items.length; n++) {
                 let itemDiv = document.createElement('li');
                 let itemName = document.createElement('a');
                 itemName.className = "listing_item_name";
-                itemName.href = homeUrl + "/item.html?itemId=" + items[n]._id.toString();
+                console.log("items[n]._id.toString():" + items[n]._id.toString());
+                itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
+                console.log("itemName.href:" + itemName.href);
                 itemName.textContent = items[n].name;
                 itemDiv.appendChild(itemName);
-                if(items[n].Image){
+                if (items[n].Image) {
                     let itemImage = document.createElement("img");
                     itemImage.src = items[n].Image;
                     itemImage.alt = items[n].Name;
@@ -76,16 +78,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 items[n].Tags.forEach(tag => {
                     let tagLink = document.createElement('a');
                     tagLink.textContent = tag;
-                    tagLink.href = `/tag/tagName?tagName=${tag}`;
+                    tagLink.href = `/listing.html?tagName=${tag}`;
                     itemTagsDiv.appendChild(tagLink);
                 });
                 itemDiv.appendChild(itemTagsDiv);
                 let itemDesc = document.createElement("h4");
                 itemDesc.textContent = items[n].Description;
+                let itemRating = document.createElement("h4");
+                itemRating.textContent = items[n].Avg_rating;
                 itemDiv.appendChild(itemDesc);
+                itemDiv.appendChild(itemRating);
                 searchList.appendChild(itemDiv);
             }
-        }else if(query.has("tagName")){
+        } else if (query.has("tagName")) {
             let tagName = query.get("tagName");
             let tagQuery = "/tag/tagName?tagName=" + tagName;
             const response = await fetch(tagQuery, {
@@ -96,14 +101,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             let items = await response.json();
             let searchList = document.getElementById("search_results");
-            for(let n = 0; n < items.length; n++){
+            for (let n = 0; n < items.length; n++) {
                 let itemDiv = document.createElement('li');
                 let itemName = document.createElement('a');
                 itemName.className = "listing_item_name";
-                itemName.href = homeUrl + "/item.html?itemId=" + items[n]._id.toString();
+                // itemName.href = homeUrl + "/item.html?itemId=" + items[n]._id.toString();
+                console.log("items[n]._id.toString():" + items[n]._id.toString());
+                itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
+                console.log("itemName.href:" + itemName.href);
                 itemName.textContent = items[n].name;
                 itemDiv.appendChild(itemName);
-                if(items[n].Image){
+                if (items[n].Image) {
                     let itemImage = document.createElement("img");
                     itemImage.src = items[n].Image;
                     itemImage.alt = items[n].Name;
@@ -113,17 +121,67 @@ document.addEventListener('DOMContentLoaded', async () => {
                 items[n].Tags.forEach(tag => {
                     let tagLink = document.createElement('a');
                     tagLink.textContent = tag;
-                    tagLink.href = `/tag/tagName?tagName=${tag}`;
+                    tagLink.href = `/listing.html?tagName=${tag}`;
                     itemTagsDiv.appendChild(tagLink);
                 });
                 itemDiv.appendChild(itemTagsDiv);
                 let itemDesc = document.createElement("h4");
                 itemDesc.textContent = items[n].Description;
+                let itemRating = document.createElement("h4");
+                itemRating.textContent = items[n].Avg_rating;
                 itemDiv.appendChild(itemDesc);
+                itemDiv.appendChild(itemRating);
                 searchList.appendChild(itemDiv);
             }
-        }else{
+        } else {
             console.log('Wrong parameter passed');
+        }
+
+    } catch (error) {
+        console.error('Error fetching item:', error);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        let query = new URLSearchParams(window.location.search);
+        if (query.has("itemName")) {
+            let itemName = query.get("itemName");
+            let responseItems = await fetch('/item/name', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: itemName }),
+            });
+            let items = await responseItems.json();
+            let searchList = document.getElementById("search_results");
+            for (let n = 0; n < items.length; n++) {
+                let itemDiv = document.createElement('li');
+                let itemName = document.createElement('a');
+                itemName.className = "listing_item_name";
+                console.log("items[n]._id.toString():" + items[n]._id.toString());
+                itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
+                console.log("itemName.href:" + itemName.href);
+                itemName.textContent = items[n].name;
+                itemDiv.appendChild(itemName);
+
+                let itemTagsDiv = document.createElement('ul');
+                items[n].Tags.forEach(tag => {
+                    let tagLink = document.createElement('a');
+                    tagLink.textContent = tag;
+                    tagLink.href = `/listing.html?tagName=${tag}`;
+                    itemTagsDiv.appendChild(tagLink);
+                });
+                itemDiv.appendChild(itemTagsDiv);
+                let itemDesc = document.createElement("h4");
+                itemDesc.textContent = items[n].Description;
+                let itemRating = document.createElement("h4");
+                itemRating.textContent = items[n].Avg_rating;
+                itemDiv.appendChild(itemDesc);
+                itemDiv.appendChild(itemRating);
+                searchList.appendChild(itemDiv);
+            }
         }
 
     } catch (error) {
