@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import session from 'express-session'
 import * as userData from "../data/users.js";
 import * as itemData from "../data/items.js"
+import * as adData from "../data/ads.js"
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 
@@ -321,5 +322,31 @@ router.get('/getUserIdByName', async (req, res) => {
     return res.status(404).json({ error: e });
   }
 })
+
+
+
+router.post("/addAd", async (req, res) => {
+  try {
+    const { Image, ItemName, Title, Description } = req.body;
+
+    if (!Image || !ItemName || !Title || !Description) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const result = await adsCollection.insertOne({
+      Image,
+      ItemName,
+      Title,
+      Description
+    });
+
+    res.status(201).json({ message: "Advertisement added successfully", id: result.insertedId });
+  } catch (error) {
+    console.error("Error adding advertisement:", error);
+    res.status(500).json({ error: "Failed to add advertisement." });
+  }
+});
+
+
 
 export default router;

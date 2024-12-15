@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement</title>
+    <link rel="stylesheet" href="../public/css/main.css">
+</head>
+<body>
+    <h1>Advertisement Manager</h1>
+
+    <!-- Form to add an advertisement -->
+    <form id="addAdForm">
+        <label for="Image">Image URL:</label>
+        <input type="text" id="Image" name="Image" required>
+
+        <label for="ItemName">Item Name:</label>
+        <input type="text" id="ItemName" name="ItemName" required>
+
+        <label for="Title">Title:</label>
+        <input type="text" id="Title" name="Title" required>
+
+        <label for="Description">Description:</label>
+        <textarea id="Description" name="Description" required></textarea>
+
+        <button type="submit">Add Advertisement</button>
+    </form>
+
+    <h2>Existing Advertisements</h2>
+    <div id="adContainer"></div>
+
+    <script src="../public/js/addAdvertisement.js"></script>
+</body>
+</html>

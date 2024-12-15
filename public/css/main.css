@@ -36,12 +36,15 @@ header {
     text-decoration: underline;
 }
 
+/* Advertisement Carousel */
 .ad-carousel {
+    position: relative;
     width: 100%;
     max-width: 800px;
     margin: 20px auto;
-    position: relative;
     overflow: hidden;
+    border: 2px solid #ccc;
+    border-radius: 10px;
 }
 
 .ad-images {
@@ -50,26 +53,31 @@ header {
 }
 
 .ad-slide {
-    min-width: 100%;
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    display: none;
+}
+
+.ad-slide.active {
+    display: block;
 }
 
 .ad-dots {
-    text-align: center;
-    margin-top: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
 }
 
 .ad-dot {
-    display: inline-block;
     width: 10px;
     height: 10px;
-    margin: 0 5px;
-    background-color: #ddd;
+    background-color: #ccc;
     border-radius: 50%;
     cursor: pointer;
 }
 
 .ad-dot.active {
-    background-color: #007bff;
+    background-color: #000;
 }
