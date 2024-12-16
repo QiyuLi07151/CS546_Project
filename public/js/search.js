@@ -51,6 +51,7 @@ let currentPage = 1;
 searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
+        if (!nameSearch) throw "Please enter a search keyword.";
         let nameSearch = searchText.value.trim();
         if (!nameSearch) throw "Please enter a search keyword.";
 
