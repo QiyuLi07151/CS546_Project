@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = usernameInput.value.trim().toLowerCase();
         const password = passwordInput.value;
         const passwordCheck = passwordCheckInput.value;
+        const isOwner = document.getElementById('isOwner').value === 'true'; 
 
         // Validate inputs
         if (!/^[a-zA-Z0-9]{5,15}$/.test(username)) {
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ Name: username, Password: password, IsOwner: false }),
+                body: JSON.stringify({ Name: username, Password: password, IsOwner: isOwner }),
             });
 
             const data = await response.json();
@@ -125,4 +126,5 @@ document.addEventListener('DOMContentLoaded', function () {
             displayError(signupForm, 'An error occurred. Please try again.');
         }
     });
+
 });

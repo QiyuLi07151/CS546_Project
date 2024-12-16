@@ -82,14 +82,14 @@ const constructorMethod = (app) => {
   //   res.redirect('/');
   // });
 
-  // app.get('/logout', middleware.checkAuthenticated, (req, res) => {
-  //   req.session.destroy(err => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //     res.redirect('/');
-  //   });
-  // });
+  app.get('/logout', middleware.checkAuthenticated, (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.log(err);
+      }
+      res.redirect('/');
+    });
+  });
 
   app.use('/', (req, res) => {
     res.sendFile(path.resolve('./static/index.html'));
