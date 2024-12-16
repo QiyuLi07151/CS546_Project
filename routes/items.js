@@ -4,6 +4,7 @@ import * as itemData from "../data/items.js";
 import * as userData from '../data/users.js'
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
+import xss from 'xss'
 
 router.get("/", async (req, res) => {
     try {
@@ -50,6 +51,7 @@ router.patch("/addTagToItem", async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error });
     }
+    tagName = xss(tagName);
     try {
         await itemData.addTagToItem(tagName, itemId);
         return res.status(200).json();
@@ -87,20 +89,8 @@ router.post("/addItem", async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error });
     }
-    // let {
-    //     ownerId,
-    //     itemName,
-    //     itemDesc,
-    //     itemTags,
-    //     itemPrice,
-    //     itemImg,
-    //     itemStatus
-    // } = data;
-    // console.log("itemStatus3:" + itemStatus);
+
     let user = req.session.user;
-    // ownerId = new ObjectId(user._id);
-    // itemStatus = itemStatus ? true : false;
-    // console.log("itemStatus4:" + itemStatus);
     try {
         validation.isProvided(ownerId);
         validation.isProvided(itemName);
@@ -115,6 +105,12 @@ router.post("/addItem", async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error });
     }
+    itemName = xss(itemName);
+    itemDesc = xss(itemDesc);
+    for(let itemTag of itemTags){
+        itemTag = xss(itemTag);
+    }
+    itemImg = xss(itemImg);
     try {
         await itemData.addItem(
             ownerId,
@@ -153,6 +149,7 @@ router.patch("/modifyReviewAndRating", async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error });
     }
+    review = xss(review);
     try {
         const item = await itemData.isPresentRatingAndReview(userId, itemId);
         if (!item) return res.status(404).json({ error: "not found" });
@@ -212,6 +209,7 @@ router.patch("/addReviewAndRating", async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error });
     }
+    review = xss(review);
     try {
         const item = await itemData.addRatingAndReview(userId, itemId, parseInt(rating), review);
         if (!item) return res.status(400).json({ error: "You have left a review, do you want to modify it?" });
@@ -301,7 +299,7 @@ router.post("/name", async (req, res) => {
         let itemName = req.body.name;
         validation.isProvided(itemName);
         itemName = validation.isValidString(itemName);
-
+        itemName = xss(itemName);
         // get item by itemName
         const items = await itemData.getItemByName(itemName);
 

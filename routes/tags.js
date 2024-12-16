@@ -4,7 +4,7 @@ import * as tagData from "../data/tags.js";
 import * as itemData from "../data/items.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
-
+import xss from "xss";
 /*
 XIAO
 Completed
@@ -45,10 +45,10 @@ router.get("/tagName", async (req, res) => {
     validation.isProvided(tagName);
     tagName = validation.isValidString(tagName);
     page = await validation.isPageValidForTagName(tagName, page);
-
   } catch (error) {
     return res.status(400).json({ error: error });
   }
+  tagName = xss(tagName);
   try {
     const itemIds = await tagData.getItemsByTag(tagName);
     const ids = itemIds.map(item => item.ItemId);
@@ -72,6 +72,11 @@ router.patch("/tagNames", async (req, res) => {
       return res.status(400).json({ error: error });
     }
   }
+  
+  for(let tag of tagNames){
+    tag = xss(tag);
+  }
+
   try {
     let allItems = [];
     for (let tagName of tagNames) {
@@ -99,6 +104,7 @@ router.post("/tags", async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error });
   }
+  tagName = xss(tagName);
   try {
     const tags = await tagData.getTagsByName(tagName);
     return res.status(200).json(tags);

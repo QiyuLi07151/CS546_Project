@@ -364,7 +364,10 @@ router.post("/advertisements", async(req, res) => {
       if (!Image || !ItemName || !Title || !Description) {
           return res.status(400).json({ error: "All fields are required" });
       }
-
+      Image = xss(Image);
+      ItemName = xss(ItemName);
+      Title = xss(Title);
+      Description = xss(Description);
       const newAd = { Image, ItemName, Title, Description };
       await adData.addAd(newAd);
       res.status(201).json({ message: "Advertisement added successfully!" });
