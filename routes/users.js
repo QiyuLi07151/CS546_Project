@@ -229,11 +229,32 @@ router.post("/updateFavoriteItem", async (req, res) => {
   try {
     validation.isProvided(userId);
     validation.isProvided(itemId);
-    userId = validation.isValidString(userId);
-    validation.isValidObjectId(userId);
-    itemId = validation.isValidString(itemId);
+    validation.isValidString(userId);
     validation.isValidObjectId(itemId);
+    // userId = validation.isValidString(userId);
+    // validation.isValidObjectId(userId);
+    // itemId = validation.isValidString(itemId);
+    // validation.isValidObjectId(itemId);
     const result = await userData.updateFavoriteItem(userId, itemId);
+    if (!result) return res.status(404).json({ error: "Either userId or itemId not found." });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+});
+
+router.post("/currentFavorite", async (req, res) => {
+  const { userId, itemId } = req.body;
+  try {
+    validation.isProvided(userId);
+    validation.isProvided(itemId);
+    validation.isValidString(userId);
+    validation.isValidObjectId(itemId);
+    // userId = validation.isValidString(userId);
+    // validation.isValidObjectId(userId);
+    // itemId = validation.isValidString(itemId);
+    // validation.isValidObjectId(itemId);
+    const result = await userData.currentFavorite(userId, itemId);
     if (!result) return res.status(404).json({ error: "Either userId or itemId not found." });
     return res.status(200).json(result);
   } catch (error) {
@@ -247,23 +268,20 @@ router.get("/wishlist", async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "Not logged in" });
     }
-    if (!user.Wishlist || !Array.isArray(user.Wishlist)) {
-      return res.status(200).json([]);
-    }
     const wishlistItems = [];
-    for (const itemId of user.Wishlist) {
-      try {
+    if (!user.Wishlist) {
+      res.status(200).json([]);
+    } else {
+      for (const itemId of user.Wishlist) {
         const item = await itemData.getItemById(itemId);
         if (item) {
           wishlistItems.push(item);
         }
-      } catch (err) {
-        console.error(`Failed to fetch item with ID ${itemId}:`, err);
       }
+      res.status(200).json(wishlistItems);
     }
-    res.status(200).json(wishlistItems);
   } catch (e) {
-    console.error("Error fetching wishlist:", e);
+    console.error(e);
     res.status(500).json({ error: "Failed to fetch wishlist" });
   }
 });
@@ -328,31 +346,31 @@ router.get('/getUserIdByName', async (req, res) => {
 
 
 
-router.get("/advertisements", async (req, res) => {
+router.get("/advertisements", async(req, res) => {
   try {
     let advertisements = await adData.getAd(3);
-    res.status(200).json({ advertisements });
+      res.status(200).json({ advertisements });
   } catch (error) {
-    console.error("Error fetching advertisements:", error);
-    res.status(500).json({ error: "Failed to fetch advertisements" });
+      console.error("Error fetching advertisements:", error);
+      res.status(500).json({ error: "Failed to fetch advertisements" });
   }
 });
 
 
-router.post("/advertisements", async (req, res) => {
+router.post("/advertisements", async(req, res) => {
   try {
-    const { Image, ItemName, Title, Description } = req.body;
+      const { Image, ItemName, Title, Description } = req.body;
 
-    if (!Image || !ItemName || !Title || !Description) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
+      if (!Image || !ItemName || !Title || !Description) {
+          return res.status(400).json({ error: "All fields are required" });
+      }
 
-    const newAd = { Image, ItemName, Title, Description };
-    await adData.addAd(newAd);
-    res.status(201).json({ message: "Advertisement added successfully!" });
+      const newAd = { Image, ItemName, Title, Description };
+      await adData.addAd(newAd);
+      res.status(201).json({ message: "Advertisement added successfully!" });
   } catch (error) {
-    console.error("Error adding advertisement:", error);
-    res.status(500).json({ error: "Failed to add advertisement" });
+      console.error("Error adding advertisement:", error);
+      res.status(500).json({ error: "Failed to add advertisement" });
   }
 });
 

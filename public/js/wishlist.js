@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let login_button = document.getElementById("login_button");
     let signup_button = document.getElementById("signup_button");
 
+    // Handle user login state
     if (localStorage.getItem("username") !== "null") {
         currentUser.hidden = false;
         currentUser.innerHTML = "Welcome, " + localStorage.getItem("username");
@@ -12,12 +13,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         signup_button.hidden = true;
     }
 
+    // Logout functionality
     logout_button.addEventListener("click", async (e) => {
         e.preventDefault();
         try {
             const response = await fetch("/logout", {
                 method: "GET",
-                credentials: "include", 
+                credentials: "include", // Include cookies
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -32,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
+    // Fetch wishlist items
     const wishlistContainer = document.getElementById("wishlist-container");
     const wishlistMessage = document.getElementById("wishlist-message");
     const wishlistItems = document.getElementById("wishlist-items");
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     try {
         const response = await fetch("/user/wishlist", {
             method: "GET",
-            credentials: "include", 
+            credentials: "include", // Include cookies
             headers: { "Content-Type": "application/json" },
         });
 
