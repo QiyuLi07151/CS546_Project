@@ -56,16 +56,16 @@ export const checkUserFavorite = async (userId, itemId) => {
     { _id: new ObjectId(userId) }
   );
   if (!user) return false;
-  const itemObjectId = new ObjectId(itemId);
-  return user.Wishlist.some(id => id.toString() === itemObjectId.toString());
+  return user.Wishlist.includes(itemId.toString());
 };
 
 export const updateFavoriteItem = async (userId, itemId) => {
   const hasFavorited = await checkUserFavorite(userId, itemId);
+
   if (!hasFavorited) {
     const userResult = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $addToSet: { Wishlist: new ObjectId(itemId) } }
+      { $addToSet: { Wishlist: itemId.toString() } }
     );
 
     if (userResult.modifiedCount === 0) {
@@ -74,19 +74,19 @@ export const updateFavoriteItem = async (userId, itemId) => {
 
     const itemResult = await itemsCollection.updateOne(
       { _id: new ObjectId(itemId) },
-      { $addToSet: { WishedBy: new ObjectId(userId) } }
+      { $addToSet: { WishedBy: userId.toString() } }
     );
 
     if (itemResult.modifiedCount === 0) {
       throw 'Failed to add user to item\'s WishedBy list';
     }
 
-    return { hasFavorited: !hasFavorited };
+    return { message: 'Item added to favorites successfully' };
   }
   if (hasFavorited) {
     const userResult = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $pull: { Wishlist: new ObjectId(itemId) } }
+      { $pull: { Wishlist: itemId.toString() } }
     );
 
     if (userResult.modifiedCount === 0) {
@@ -95,18 +95,13 @@ export const updateFavoriteItem = async (userId, itemId) => {
 
     const itemResult = await itemsCollection.updateOne(
       { _id: new ObjectId(itemId) },
-      { $pull: { WishedBy: new ObjectId(userId) } }
+      { $pull: { WishedBy: userId.toString() } }
     );
 
     if (itemResult.modifiedCount === 0) {
       throw 'Failed to remove user from item\'s WishedBy list';
     }
 
-    return { hasFavorited: !hasFavorited };
+    return { message: 'Item removed from favorites successfully' };
   }
-};
-
-export const currentFavorite = async (userId, itemId) => {
-  const hasFavorited = await checkUserFavorite(userId, itemId);
-  return { hasFavorited: hasFavorited };
 };

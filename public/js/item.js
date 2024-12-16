@@ -172,40 +172,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         let itemData = [];
         const itemTagsDiv = document.getElementById('item_tags');
 
-        let responseFavorite = await fetch('/user/currentFavorite', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, itemId }),
-        });
-        let favoriteData = await responseFavorite.json();
-        let hasFavorited = favoriteData.hasFavorited;
-
-        const itemWishDiv = document.getElementById('item_wish');
-        let itemWish = document.createElement('button');
-        updateFavoriteItemButton(itemWish, hasFavorited);
-
-        itemWish.addEventListener('click', async () => {
-            let response = await fetch('/user/updateFavoriteItem', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, itemId }),
-            });
-            let newFavoriteData = await response.json();
-            hasFavorited = newFavoriteData.hasFavorited;
-
-            // tagLink.textContent = `${tag} (${upvoteCount})`;
-            updateFavoriteItemButton(itemWish, hasFavorited);
-        });
-        // itemDesc.textContent = item.Description;
-        itemWishDiv.appendChild(itemWish);
-
-        function updateFavoriteItemButton(button, hasFavorited) {
-            button.textContent = hasFavorited ? 'hasFavorited' : 'hasNotFavorited';
-            button.className = hasFavorited ? 'Favorited' : 'not-Favorited';
-        }
-
         try {
             const response = await fetch('/tag/tagNames', {
                 method: 'PATCH',
