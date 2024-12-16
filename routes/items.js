@@ -81,29 +81,20 @@ router.post("/addItem", async (req, res) => {
     if (!req.files || !req.files.itemImg) {
         return res.status(400).json({ error: 'No files were uploaded.' });
     }
-
+    itemTags = itemTags.split(',').map(tag => tag.trim());
     let itemImgFile = req.files.itemImg;
-
-
+    itemPrice = parseFloat(itemPrice);
+    itemStatus = itemStatus === "true";
     const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
     await itemImgFile.mv(uploadPath);
 
 
     const itemImg = '/public/images/' + itemImgFile.name;
-    // console.log("data:" + data);
-    // console.log("ownerId:" + ownerId);
-    // console.log("itemName:" + itemName);
-    // console.log("itemDesc:" + itemDesc);
-    // console.log("itemTags:" + itemTags);
-    // console.log("itemPrice:" + itemPrice);
-    // console.log("itemImg:" + itemImg);
-    // console.log("itemStatus5:" + itemStatus);
-    // console.log("typeof:" + typeof data.itemStatus);
-    // console.log("typeof:" + typeof req.body.itemStatus);
-    if (!data || Object.keys(data).length === 0)
+    const newData = {ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus};
+    if (!newData || Object.keys(newData).length === 0)
         return res.status(400).json({ error: 'There are no fields in the request body.' });
     try {
-        // validation.isValidAddItemFuncData(data);
+        validation.isValidAddItemFuncData(newData);
     } catch (error) {
         return res.status(400).json({ error: error });
     }
