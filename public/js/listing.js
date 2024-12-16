@@ -50,14 +50,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         let query = new URLSearchParams(window.location.search);
         if (query.has("itemName")) {
             let itemName = query.get("itemName");
-            let responseItems = await fetch('/item/name', {
+            if(!itemName || itemName.trim().length === 0)
+                throw "itemName is not provided.";
+            itemName = itemName.trim();
+            let items = await fetch('/item/name', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name: itemName }),
+            }).then(async (res) => {
+                if(!res.ok){
+                    throw "items not found.";
+                }
+                return res.json();
             });
-            let items = await responseItems.json();
             let searchList = document.getElementById("search_results");
             for (let n = 0; n < items.length; n++) {
                 let itemDiv = document.createElement('li');
@@ -99,6 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             let items = await response.json();
             let searchList = document.getElementById("search_results");
+            console.log(items);
             for (let n = 0; n < items.length; n++) {
                 let itemDiv = document.createElement('li');
                 let itemName = document.createElement('a');
@@ -136,6 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
     } catch (error) {
-        console.error('Error fetching item:', error);
+        const e = document.getElementById("error");
+        e.innerText = error;
+        e.hidden = false;
     }
 });

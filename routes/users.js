@@ -7,7 +7,7 @@ import * as itemData from "../data/items.js"
 import * as adData from "../data/ads.js"
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
-
+import xss from "xss";
 /*
 XIAO
 Completed
