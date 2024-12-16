@@ -67,6 +67,17 @@ router.patch("/addTagToItem", async (req, res) => {
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
 
+    
+    const data = req.body;
+    let {
+        ownerId,
+        itemName,
+        itemDesc,
+        itemTags,
+        itemPrice,
+
+        itemStatus
+    } = data;
     if (!req.files || !req.files.itemImg) {
         return res.status(400).json({ error: 'No files were uploaded.' });
     }
@@ -79,16 +90,6 @@ router.post("/addItem", async (req, res) => {
 
 
     const itemImg = '/public/images/' + itemImgFile.name;
-    const data = req.body;
-    let {
-        ownerId,
-        itemName,
-        itemDesc,
-        itemTags,
-        itemPrice,
-
-        itemStatus
-    } = data;
     // console.log("data:" + data);
     // console.log("ownerId:" + ownerId);
     // console.log("itemName:" + itemName);
@@ -109,7 +110,7 @@ router.post("/addItem", async (req, res) => {
 
     // let user = req.session.user;
     try {
-        // validation.isProvided(ownerId);
+        validation.isProvided(ownerId);
         validation.isProvided(itemName);
         validation.isProvided(itemDesc);
         if (itemDesc.length > 150) {
