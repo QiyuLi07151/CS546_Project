@@ -115,3 +115,9 @@ footer {
   bottom: 0;
   width: 100%;
 }
+
+#error {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
