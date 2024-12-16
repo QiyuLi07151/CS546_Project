@@ -20,12 +20,7 @@ header {
     padding: 10px 0;
 }
 
-.nav_bar a {
-    text-decoration: none;
-    color: #007bff;
-    margin: 0 15px;
-    font-weight: bold;
-}
+
 
 .nav_bar a:hover {
     text-decoration: underline;
