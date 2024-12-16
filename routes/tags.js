@@ -60,6 +60,37 @@ router.get("/tagName", async (req, res) => {
 });
 
 
+// return top three items for each tagName
+router.patch("/tagNames", async (req, res) => {
+  let tagNames = req.body.tagNames;
+
+  for (let tagName of tagNames) {
+    try {
+      validation.isProvided(tagName);
+      tagName = validation.isValidString(tagName);
+    } catch (error) {
+      return res.status(400).json({ error: error });
+    }
+  }
+  try {
+    let allItems = [];
+    for (let tagName of tagNames) {
+      const items = await tagData.getItemsByTag(tagName);
+
+      let topThree = items.slice(0, 3);
+      let topThreeIds = topThree.map(obj => obj.ItemId);
+      allItems.push(...topThreeIds);
+    }
+    const finalItems = await Promise.all(
+      allItems.map(id => itemData.getItemById(id))
+    );
+    return res.json(finalItems);
+  } catch (error) {
+    return res.status(404).json({ error: error });
+  }
+});
+
+
 router.post("/tags", async (req, res) => {
   let tagName = req.body.tagName;
   try {

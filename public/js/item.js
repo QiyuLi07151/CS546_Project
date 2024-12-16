@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const userName = localStorage.getItem("username");
 
+
+        // get userId
         let userId;
         const responseId = await fetch("/user/getUserIdByName?userName=" + userName, {
             method: 'GET',
@@ -74,49 +76,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Failed to fetch user ID:', responseId.statusText);
         }
 
-        const reviewForm = document.getElementById('reviewForm');
-        reviewForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const review = document.getElementById('review').value;
-            const rating = document.getElementById('rating').value;
-            // 新增检测rating是否超过5.0
-            if (parseFloat(rating) > 5) {
-                alert('Rating cannot exceed 5.0');
-                return; // 直接停止后续操作
-            }
-            const payload = {
-                userId,
-                itemId,
-                review,
-                rating
-            };
-
-            try {
-                const response = await fetch('/item/addReviewAndRating', {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    alert('make a review successfully');
-                    location.reload();
-
-                } else {
-                    const error = await response.json();
-                    alert(`make review failed: ${error.error}`);
-                }
-            } catch (error) {
-                console.error('There is a error when you make a review:', error);
-
-            }
-        });
 
 
+        // display item info
         const itemImageDiv = document.getElementById('item_image');
         if (item.Image) {
             let itemImage = document.createElement('img');
@@ -135,8 +97,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         itemDesc.textContent = item.Description;
         itemDescDiv.appendChild(itemDesc);
 
-        const itemTagsDiv = document.getElementById('item_tags');
+
+
+        // tag part
+
         item.Tags.forEach(async tag => {
+
+
 
             let responseTag = await fetch('/tag/tags', {
                 method: 'POST',
@@ -195,129 +162,77 @@ document.addEventListener('DOMContentLoaded', async () => {
             // itemTagsDiv.appendChild(tagLink);
         });
 
+
         function updateVoteButton(button, hasUpvoted) {
             button.textContent = hasUpvoted ? 'hasUpvoted' : 'hasNotUpvoted';
             button.className = hasUpvoted ? 'upvoted' : 'not-upvoted';
         }
 
-        let make_review_rating = document.getElementById("make_review_rating");
-        make_review_rating.hidden = false;
-        if (localStorage.getItem("role") == "Seller") {
-            make_review_rating.hidden = true;
-        }
-        else if (localStorage.getItem("role") == "Buyer") {
-            // if buyer already left a review
+        // recommendation part
+        let itemData = [];
+        const itemTagsDiv = document.getElementById('item_tags');
 
-            const params = new URLSearchParams({ itemId, userName });
-
-            let queryUser = `/user/isMadeReview?${params.toString()}`;
-            const userResponse = await fetch(queryUser, {
-                method: 'GET',
+        try {
+            const response = await fetch('/tag/tagNames', {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ tagNames: item.Tags })
             });
-            let res = await userResponse.json();
-            // console.log(res);
 
-            if (res.isMadeReview) {
-                make_review_rating.hidden = true;
+            if (response.ok) {
+                itemData = await response.json();
+
+
             }
+        } catch (error) {
+            console.error('There is a error when you make a review:', error);
+
         }
+        console.log(itemData);
 
 
+        const recommendationList = document.getElementById('recommendation_list');
 
 
+        itemData.forEach((recItem) => {
 
-        const editModal = document.getElementById('editModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const editReviewForm = document.getElementById('editReviewForm');
-        const editTextarea = document.getElementById('editTextarea');
-        const editRating = document.getElementById('editRating');
-        const submitEditBtn = document.getElementById('submitEditBtn');
-        const deleteReviewBtn = document.getElementById('deleteReviewBtn');
+            let card = document.createElement('div');
+            card.classList.add('recommend_card');
 
-        
-        function closeModal() {
-            editModal.style.display = 'none';
-        }
+            let recImg = document.createElement('img');
+            recImg.src = recItem.Image;
+            recImg.alt = recItem.Name || 'Recommendation';
 
-       
-        closeModalBtn.addEventListener('click', closeModal);
+            recImg.style.width = "200px";
+            recImg.style.height = "auto";
 
-   
-        window.addEventListener('click', (event) => {
-            if (event.target === editModal) {
-                closeModal();
-            }
+
+            let recName = document.createElement('div');
+            recName.classList.add('recommend_name');
+            recName.textContent = recItem.Name;
+
+
+            card.appendChild(recImg);
+            card.appendChild(recName);
+
+            card.addEventListener('mouseover', () => {
+                recName.style.display = 'block';
+            });
+
+            card.addEventListener('mouseout', () => {
+                recName.style.display = 'none';
+            });
+
+
+            card.addEventListener('click', () => {
+                window.location.href = `/item.html/?itemId=${recItem._id}`;
+            });
+
+            recommendationList.appendChild(card);
         });
-
-        let currentReviewPayload = { userId, itemId };
-     
-        submitEditBtn.addEventListener('click', async () => {
-            const review = editTextarea.value;
-            const rating = editRating.value;
-
-            if (parseFloat(rating) > 5) {
-                alert('Rating cannot exceed 5.0');
-                return; 
-            }
-
-         
-            const payload = {
-                userId: currentReviewPayload.userId,
-                itemId: currentReviewPayload.itemId,
-                review,
-                rating
-            };
-
-            try {
-                const response = await fetch('/item/modifyReviewAndRating', {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    alert('Edit review successfully');
-                    closeModal();    
-                    location.reload(); 
-                } else {
-                    const error = await response.json();
-                    alert(`Edit review failed: ${error.error}`);
-                }
-            } catch (error) {
-                console.error('Error editing review:', error);
-            }
-        });
-        deleteReviewBtn.addEventListener('click', async () => {
-           
-            const payload = {
-                userId: currentReviewPayload.userId,
-                itemId: currentReviewPayload.itemId
-               
-            };
-
-            try {
-                const response = await fetch('/item/deleteReviewAndRating', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    alert('Delete review successfully');
-                    closeModal();  
-                    location.reload(); 
-                } else {
-                    const error = await response.json();
-                    alert(`Delete review failed: ${error.error}`);
-                }
-            } catch (error) {
-                console.error('Error deleting review:', error);
-            }
-        });
-
+        // review list part
         const reviewsList = document.getElementById('reviews_list');
         for (const review of item.Reviews) {
             let reviewLi = document.createElement('li');
@@ -377,14 +292,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.textContent = 'Edit';
                 editBtn.classList.add('edit_button');
                 editBtn.addEventListener('click', () => {
-                   
+
                     editModal.style.display = 'block';
 
-                    
+
                     editTextarea.value = review.Review;
                     editRating.value = review.Rating;
 
-                    
+
                 });
 
                 reviewLi.appendChild(editBtn);
@@ -392,6 +307,171 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             reviewsList.appendChild(reviewLi);
         }
+
+        // add review part
+
+        let make_review_rating = document.getElementById("make_review_rating");
+        make_review_rating.hidden = false;
+        if (localStorage.getItem("role") == "Seller") {
+            make_review_rating.hidden = true;
+        }
+        else if (localStorage.getItem("role") == "Buyer") {
+            // if buyer already left a review
+
+            const params = new URLSearchParams({ itemId, userName });
+
+            let queryUser = `/user/isMadeReview?${params.toString()}`;
+            const userResponse = await fetch(queryUser, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = await userResponse.json();
+            // console.log(res);
+
+            if (res.isMadeReview) {
+                make_review_rating.hidden = true;
+            }
+        }
+
+        const reviewForm = document.getElementById('reviewForm');
+        reviewForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const review = document.getElementById('review').value;
+            const rating = document.getElementById('rating').value;
+
+            if (parseFloat(rating) > 5) {
+                alert('Rating cannot exceed 5.0');
+                return;
+            }
+            const payload = {
+                userId,
+                itemId,
+                review,
+                rating
+            };
+
+            try {
+                const response = await fetch('/item/addReviewAndRating', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('make a review successfully');
+                    location.reload();
+
+                } else {
+                    const error = await response.json();
+                    alert(`make review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('There is a error when you make a review:', error);
+
+            }
+        });
+
+
+
+
+        // edit review modal
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const editReviewForm = document.getElementById('editReviewForm');
+        const editTextarea = document.getElementById('editTextarea');
+        const editRating = document.getElementById('editRating');
+        const submitEditBtn = document.getElementById('submitEditBtn');
+        const deleteReviewBtn = document.getElementById('deleteReviewBtn');
+
+
+        function closeModal() {
+            editModal.style.display = 'none';
+        }
+
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+
+        window.addEventListener('click', (event) => {
+            if (event.target === editModal) {
+                closeModal();
+            }
+        });
+
+        let currentReviewPayload = { userId, itemId };
+
+        submitEditBtn.addEventListener('click', async () => {
+            const review = editTextarea.value;
+            const rating = editRating.value;
+
+            if (parseFloat(rating) > 5) {
+                alert('Rating cannot exceed 5.0');
+                return;
+            }
+
+
+            const payload = {
+                userId: currentReviewPayload.userId,
+                itemId: currentReviewPayload.itemId,
+                review,
+                rating
+            };
+
+            try {
+                const response = await fetch('/item/modifyReviewAndRating', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Edit review successfully');
+                    closeModal();
+                    location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(`Edit review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error editing review:', error);
+            }
+        });
+        deleteReviewBtn.addEventListener('click', async () => {
+
+            const payload = {
+                userId: currentReviewPayload.userId,
+                itemId: currentReviewPayload.itemId
+
+            };
+
+            try {
+                const response = await fetch('/item/deleteReviewAndRating', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Delete review successfully');
+                    closeModal();
+                    location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(`Delete review failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting review:', error);
+            }
+        });
+
+
+
 
         function createStars(rating) {
             let fullStar = '<span class="star filled">★</span>';
