@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             wishlistMessage.textContent = "Your wishlist is empty.";
             return;
         }
-
+        // console.log(data);
+        
         wishlistMessage.style.display = "none";
 
         data.forEach((item) => {

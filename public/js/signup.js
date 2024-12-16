@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         clearError(signupForm);
 
-        const username = usernameInput.value.trim();
+        const username = usernameInput.value.trim().toLowerCase();
         const password = passwordInput.value;
         const passwordCheck = passwordCheckInput.value;
 

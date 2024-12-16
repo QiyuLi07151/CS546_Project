@@ -50,8 +50,9 @@ header {
 }
 
 .item_image img {
-  max-width: 100%;
-  border-radius: 10px;
+  width: 388px;
+  height: 300px;
+  border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Image shadow */
   position: relative;
 }
@@ -98,32 +99,31 @@ header {
 /* Tags styling */
 
 .tag-item {
-  display: inline-flex; 
-  align-items: center; 
-  gap: 8px; 
-  margin: 5px; 
-  padding: 5px 10px; 
-  background-color: #f0f8ff; 
-  border-radius: 6px; 
-  border: 1px solid #d0d0d0; 
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: #f0f8ff;
+  border-radius: 6px;
+  border: 1px solid #d0d0d0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: background-color 0.3s ease;
 }
 
 .tag-item:hover {
-  background-color: #e8f4ff; 
+  background-color: #e8f4ff;
 }
 
-
 .tag-item a {
-  text-decoration: none; 
+  text-decoration: none;
   color: #007bff;
-  font-weight: 500; 
+  font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .tag-item a:hover {
-  color: #0056b3; 
+  color: #0056b3;
 }
 
 .tag-item button {
@@ -136,21 +136,19 @@ header {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
 .upvoted {
-  background-color: #28a745; 
-  color: #fff; 
+  background-color: #28a745;
+  color: #fff;
 }
 
-
 .not-upvoted {
-  background-color: #6c757d; 
+  background-color: #6c757d;
   color: #fff;
 }
 
 .upvoted:hover,
 .not-upvoted:hover {
-  opacity: 0.9; 
+  opacity: 0.9;
 }
 
 /* Reviews section styling */
@@ -513,9 +511,10 @@ header {
   justify-content: flex-end;
 }
 
-.recommend_card img.recommend_img {
+.recommend_card img {
+  height: 120px;
   width: 100%;
-  height: auto;
+  /* height: auto; */
   flex-shrink: 0;
   object-fit: cover;
 }
@@ -527,7 +526,7 @@ header {
   font-weight: bold;
   padding: 4px 6px;
   text-align: center;
-  overflow: hidden;
+  /* overflow: hidden; */
   white-space: nowrap;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
 }

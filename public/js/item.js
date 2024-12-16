@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // display item info
         const itemImageDiv = document.getElementById('item_image');
         if (item.Image) {
+            // console.log(item.Image);
+            
             let itemImage = document.createElement('img');
             itemImage.src = item.Image;
             itemImage.alt = item.Name;
@@ -100,7 +102,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // tag part
-
+        // console.log(item.Tags);
+        
         item.Tags.forEach(async tag => {
 
 
@@ -114,7 +117,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             let tagData = await responseTag.json();
-
+            console.log(tagData);
+            
             let targetTagName = tagData.find(t => t.TagName === tag);
             let tagId = targetTagName ? targetTagName._id : null;
 
@@ -239,8 +243,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             recImg.src = recItem.Image;
             recImg.alt = recItem.Name || 'Recommendation';
 
-            recImg.style.width = "200px";
-            recImg.style.height = "auto";
+            // recImg.style.width = "220px";
+            // recImg.style.height = "120px";
 
 
             let recName = document.createElement('div');
@@ -251,13 +255,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             card.appendChild(recImg);
             card.appendChild(recName);
 
-            card.addEventListener('mouseover', () => {
-                recName.style.display = 'block';
-            });
+            // card.addEventListener('mouseover', () => {
+            //     recName.style.display = 'block';
+            // });
 
-            card.addEventListener('mouseout', () => {
-                recName.style.display = 'none';
-            });
+            // card.addEventListener('mouseout', () => {
+            //     recName.style.display = 'none';
+            // });
 
 
             card.addEventListener('click', () => {
@@ -363,7 +367,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
             });
             let res = await userResponse.json();
-            // console.log(res);
+            console.log(res);
 
             if (res.isMadeReview) {
                 make_review_rating.hidden = true;
