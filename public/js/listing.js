@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (items[n].Image) {
                     let itemImage = document.createElement("img");
                     itemImage.src = items[n].Image;
-                    itemImage.alt = items[n].Name;
+                    // itemImage.alt = items[n].Name;
                     itemDiv.appendChild(itemImage);
                 }
                 let itemTagsDiv = document.createElement('ul');
@@ -104,15 +104,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let itemName = document.createElement('a');
                 itemName.className = "listing_item_name";
                 // itemName.href = homeUrl + "/item.html?itemId=" + items[n]._id.toString();
-                console.log("items[n]._id.toString():" + items[n]._id.toString());
+                // console.log("items[n]._id.toString():" + items[n]._id.toString());
                 itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
-                console.log("itemName.href:" + itemName.href);
+                // console.log("itemName.href:" + itemName.href);
                 itemName.textContent = items[n].Name;
                 itemDiv.appendChild(itemName);
                 if (items[n].Image) {
                     let itemImage = document.createElement("img");
                     itemImage.src = items[n].Image;
-                    itemImage.alt = items[n].Name;
+                    // itemImage.alt = items[n].Name;
                     itemDiv.appendChild(itemImage);
                 }
                 let itemTagsDiv = document.createElement('ul');

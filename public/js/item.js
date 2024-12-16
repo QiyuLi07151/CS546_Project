@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let tagLink = document.createElement('a');
             tagLink.textContent = `${tag} (${upvoteCount})`;
-            tagLink.href = `/tag/tagName?tagName=${tag}`;
+            tagLink.href = `/listing.html?tagName=${tag}`;
             tagElement.appendChild(tagLink);
 
             let voteButton = document.createElement('button');

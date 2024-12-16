@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
@@ -23,4 +23,95 @@
     .item {
       flex: 0 0 50%;
     }
-  }
+  } */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+.login {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #333;
+}
+
+.login a {
+  color: white;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+header {
+  background-color: #444;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.nav_bar {
+  display: flex;
+  justify-content: center;
+  background-color: #555;
+}
+
+.nav_bar a {
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+}
+
+#search_results {
+  list-style-type: none;
+  padding: 0;
+}
+
+#search_results li {
+  background-color: white;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.listing_item_name {
+  font-size: 18px;
+  color: #0066cc;
+  text-decoration: none;
+}
+
+#search_results img {
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 10px;
+}
+
+#search_results ul {
+  padding: 0;
+}
+
+#search_results ul a {
+  background-color: #e0e0e0;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #333;
+}
+
+h4 {
+  margin: 10px 0;
+  color: #555;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
