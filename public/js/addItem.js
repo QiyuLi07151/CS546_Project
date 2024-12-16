@@ -76,10 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/item/addItem', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(itemData)
+                body: formData
             });
 
             if (!response.ok) {

@@ -4,6 +4,7 @@ import session from 'express-session'
 import path from 'path';
 import middleware from './middleware.js';
 import configRoutes from './routes/index.js'
+import fileUpload from 'express-fileupload';
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,7 +21,7 @@ app.use(
 
 app.use('/public', express.static('public'));
 app.use('/static', express.static('static'));
-
+app.use(fileUpload());
 configRoutes(app);
 app.listen(3000, () => {
     console.log("We've now got a server!");

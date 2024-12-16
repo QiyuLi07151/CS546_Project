@@ -5,6 +5,10 @@ import * as userData from '../data/users.js'
 import { ObjectId } from "mongodb";
 import * as validation from "../helpers.js";
 import xss from 'xss'
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 router.get("/", async (req, res) => {
     try {
@@ -62,6 +66,19 @@ router.patch("/addTagToItem", async (req, res) => {
 
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
+    
+    if (!req.files || !req.files.itemImg) {
+        return res.status(400).json({ error: 'No files were uploaded.' });
+    }
+   
+    let itemImgFile = req.files.itemImg; 
+
+   
+    const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
+    await itemImgFile.mv(uploadPath);
+
+    
+    const itemImg = '/public/images/' + itemImgFile.name;
     const data = req.body;
     let {
         ownerId,
@@ -69,7 +86,7 @@ router.post("/addItem", async (req, res) => {
         itemDesc,
         itemTags,
         itemPrice,
-        itemImg,
+        
         itemStatus
     } = data;
     // console.log("data:" + data);
@@ -85,14 +102,14 @@ router.post("/addItem", async (req, res) => {
     if (!data || Object.keys(data).length === 0)
         return res.status(400).json({ error: 'There are no fields in the request body.' });
     try {
-        validation.isValidAddItemFuncData(data);
+        // validation.isValidAddItemFuncData(data);
     } catch (error) {
         return res.status(400).json({ error: error });
     }
 
-    let user = req.session.user;
+    // let user = req.session.user;
     try {
-        validation.isProvided(ownerId);
+        // validation.isProvided(ownerId);
         validation.isProvided(itemName);
         validation.isProvided(itemDesc);
         if (itemDesc.length > 150) {
@@ -110,7 +127,7 @@ router.post("/addItem", async (req, res) => {
     for(let itemTag of itemTags){
         itemTag = xss(itemTag);
     }
-    itemImg = xss(itemImg);
+    // itemImg = xss(itemImg);
     try {
         await itemData.addItem(
             ownerId,
