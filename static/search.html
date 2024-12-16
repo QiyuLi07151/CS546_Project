@@ -10,42 +10,43 @@
 </head>
 
 <body>
-<div class="login">
-    <a id = "login_button" class="login_button" href="login.html">Login</a>
-    <a id = "signup_button" class="signup_button" href="signup.html">SignUp</a>
-    <a id="current_user" class="current_user" hidden>Username</a>
-    <button id="logout_button" class="logout_button" hidden>Logout</button>
-</div>
+    <div class="login">
+        <a id="login_button" class="login_button" href="login.html">Login</a>
+        <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
+        <a id="current_user" class="current_user" hidden>Username</a>
+        <button id="logout_button" class="logout_button" hidden>Logout</button>
+    </div>
 
-<header>
-    <h1>Place Holder Title</h1>
-</header>
+    <header>
+        <h1>Place Holder Title</h1>
+    </header>
 
-<div class="nav_bar">
-    <a class="page" href="index.html">Home</a>
-    <a class="current_page" href="search.html">Search</a>
-    <a class="page" href="tags.html">Search By Tag</a>
-    <a id="add_item" class="page" href="addItem.html" hidden>addItem</a>
-    <a class="page" href="wishlist.html">Wishlist</a>
-</div>
+    <div class="nav_bar">
+        <a class="page" href="index.html">Home</a>
+        <a class="current_page" href="search.html">Search</a>
+        <a class="page" href="tags.html">Search By Tag</a>
+        <a id="add_item" class="page" href="addItem.html" hidden>addItem</a>
+        <a class="page" href="wishlist.html">Wishlist</a>
+    </div>
 
-<div class="search_bar">
-    <h2>Search For a Product</h2>
-    <form class="search_form" id="search_form">
-        <label for="text_search">Search:</label>
-        <input class="text_search" id="text_search" type="text" placeholder="Search..">
-        <button type="submit" class="submit_button">
+    <div class="search_bar">
+        <h2>Search For a Product</h2>
+        <form class="search_form" id="search_form">
+            <label for="text_search">Search:</label>
+            <input class="text_search" id="text_search" type="text" placeholder="Search..">
+            <button type="submit" class="submit_button">
                 Submit
-        </button>
-        
-    </form>
-</div>
+            </button>
 
-<ol id="text_search_results">
-</ol>
+        </form>
+    </div>
 
-<footer></footer>
-<script src='../public/js/search.js'></script>
+    <ol id="text_search_results">
+    </ol>
+    <div id="pagination"></div>
+
+    <footer></footer>
+    <script src='../public/js/search.js'></script>
 </body>
 
 </html>

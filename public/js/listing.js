@@ -1,151 +1,97 @@
-const homeUrl = window.location.origin;
-document.addEventListener('DOMContentLoaded', async function () {
-    let currentUser = document.getElementById("current_user");
-    let logout_button = document.getElementById("logout_button");
-    let login_button = document.getElementById("login_button");
-    let signup_button = document.getElementById("signup_button");
-    let add_item = document.getElementById("add_item");
-
-    if (localStorage.getItem("username") != "null") {
-        currentUser.hidden = false;
-        currentUser.innerHTML = "Welcome, " + localStorage.getItem("username");
-        logout_button.hidden = false;
-        login_button.hidden = true;
-        signup_button.hidden = true;
-    }
-    let isOwner = false;
-    try {
-        const response = await fetch('/user/currentUserIsOwner');
-        const data = await response.json();
-        isOwner = data.isOwner;
-    } catch (error) {
-        alert('Failed to get user ID, please make sure you are logged in.');
-        return;
-    }
-    if (isOwner) {
-        add_item.hidden = false;
-    }
-
-    document.getElementById("logout_button").addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        const response = await fetch('/logout', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        window.location.href = '/';
-        localStorage.setItem("username", null);
-        currentUser.hidden = true;
-        logout_button.hidden = true;
-        login_button.hidden = false;
-        signup_button.hidden = false;
-        add_item.hidden = true;
-    });
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        let query = new URLSearchParams(window.location.search);
-        if (query.has("itemName")) {
-            let itemName = query.get("itemName");
-            if(!itemName || itemName.trim().length === 0)
-                throw "itemName is not provided.";
-            itemName = itemName.trim();
-            let items = await fetch('/item/name', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: itemName }),
-            }).then(async (res) => {
-                if(!res.ok){
-                    throw "items not found.";
-                }
-                return res.json();
-            });
-            let searchList = document.getElementById("search_results");
-            for (let n = 0; n < items.length; n++) {
-                let itemDiv = document.createElement('li');
-                let itemName = document.createElement('a');
-                itemName.className = "listing_item_name";
-                itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
-                itemName.textContent = items[n].Name;
-                itemDiv.appendChild(itemName);
-                if (items[n].Image) {
-                    let itemImage = document.createElement("img");
-                    itemImage.src = items[n].Image;
-                    // itemImage.alt = items[n].Name;
-                    itemDiv.appendChild(itemImage);
-                }
-                let itemTagsDiv = document.createElement('ul');
-                items[n].Tags.forEach(tag => {
-                    let tagLink = document.createElement('a');
-                    tagLink.textContent = tag;
-                    tagLink.href = `/listing.html?tagName=${tag}`;
-                    itemTagsDiv.appendChild(tagLink);
-                });
-                itemDiv.appendChild(itemTagsDiv);
-                let itemDesc = document.createElement("h4");
-                itemDesc.textContent = items[n].Description;
-                let itemRating = document.createElement("h4");
-                itemRating.textContent = items[n].Avg_rating;
-                itemDiv.appendChild(itemDesc);
-                itemDiv.appendChild(itemRating);
-                searchList.appendChild(itemDiv);
-            }
-        } else if (query.has("tagName")) {
-            let tagName = query.get("tagName");
-            let tagQuery = "/tag/tagName?tagName=" + tagName;
-            const response = await fetch(tagQuery, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            let items = await response.json();
-            let searchList = document.getElementById("search_results");
-            console.log(items);
-            for (let n = 0; n < items.length; n++) {
-                let itemDiv = document.createElement('li');
-                let itemName = document.createElement('a');
-                itemName.className = "listing_item_name";
-                // itemName.href = homeUrl + "/item.html?itemId=" + items[n]._id.toString();
-                // console.log("items[n]._id.toString():" + items[n]._id.toString());
-                itemName.href = `/item.html?itemId=${items[n]._id.toString()}`;
-                // console.log("itemName.href:" + itemName.href);
-                itemName.textContent = items[n].Name;
-                itemDiv.appendChild(itemName);
-                if (items[n].Image) {
-                    let itemImage = document.createElement("img");
-                    itemImage.src = items[n].Image;
-                    // itemImage.alt = items[n].Name;
-                    itemDiv.appendChild(itemImage);
-                }
-                let itemTagsDiv = document.createElement('ul');
-                items[n].Tags.forEach(tag => {
-                    let tagLink = document.createElement('a');
-                    tagLink.textContent = tag;
-                    tagLink.href = `/listing.html?tagName=${tag}`;
-                    itemTagsDiv.appendChild(tagLink);
-                });
-                itemDiv.appendChild(itemTagsDiv);
-                let itemDesc = document.createElement("h4");
-                itemDesc.textContent = items[n].Description;
-                let itemRating = document.createElement("h4");
-                itemRating.textContent = items[n].Avg_rating;
-                itemDiv.appendChild(itemDesc);
-                itemDiv.appendChild(itemRating);
-                searchList.appendChild(itemDiv);
-            }
-        } else {
-            console.log('Wrong parameter passed');
-        }
+        const query = new URLSearchParams(window.location.search);
+        const page = parseInt(query.get("page")) || 1;
+        const itemName = query.get("itemName")?.trim();
+        const tagName = query.get("tagName")?.trim();
 
+        if (itemName) {
+            await fetchAndRenderResults('/item/name', { name: itemName }, page);
+        } else if (tagName) {
+            await fetchAndRenderResults('/tag/tagName', { tagName: tagName }, page);
+        } else {
+            throw "Invalid query parameters.";
+        }
     } catch (error) {
-        const e = document.getElementById("error");
-        e.innerText = error;
-        e.hidden = false;
+        displayError(error);
     }
 });
+
+async function fetchAndRenderResults(url, body, page) {
+    try {
+        const response = await fetch(`${url}?page=${page}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) throw "Failed to fetch search results.";
+
+        const { items, totalPages, currentPage } = await response.json();
+        renderSearchResults(items);
+        renderPagination(totalPages, currentPage, body.name || body.tagName, url);
+    } catch (error) {
+        displayError(error);
+    }
+}
+
+function renderSearchResults(items) {
+    const resultsContainer = document.getElementById("text_search_results");
+    resultsContainer.innerHTML = '';
+
+    items.forEach(item => {
+        const itemDiv = document.createElement('li');
+
+        const itemName = document.createElement('a');
+        itemName.className = "listing_item_name";
+        itemName.href = `/item.html?itemId=${item._id}`;
+        itemName.textContent = item.Name;
+        itemDiv.appendChild(itemName);
+
+        if (item.Image) {
+            const itemImage = document.createElement("img");
+            itemImage.src = item.Image;
+            itemImage.style.width = "50px";
+            itemDiv.appendChild(itemImage);
+        }
+
+        const itemDesc = document.createElement("p");
+        itemDesc.textContent = `Description: ${item.Description || 'N/A'}`;
+        const itemRating = document.createElement("p");
+        itemRating.textContent = `Rating: ${item.Avg_rating || 0}`;
+
+        itemDiv.appendChild(itemDesc);
+        itemDiv.appendChild(itemRating);
+
+        resultsContainer.appendChild(itemDiv);
+    });
+}
+
+function renderPagination(totalPages, currentPage, query, url) {
+    const paginationContainer = document.getElementById("pagination");
+    paginationContainer.innerHTML = '';
+
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    paginationContainer.appendChild(pageInfo);
+
+    if (currentPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.onclick = () => fetchAndRenderResults(url, { name: query }, currentPage - 1);
+        paginationContainer.appendChild(prevButton);
+    }
+
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.onclick = () => fetchAndRenderResults(url, { name: query }, currentPage + 1);
+        paginationContainer.appendChild(nextButton);
+    }
+}
+
+function displayError(error) {
+    const errorContainer = document.getElementById("error");
+    errorContainer.innerText = error;
+    errorContainer.hidden = false;
+}
