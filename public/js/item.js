@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('There is a error when you make a review:', error);
 
         }
-        console.log(itemData);
+        // console.log(itemData);
 
 
         const recommendationList = document.getElementById('recommendation_list');
@@ -293,7 +293,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.classList.add('edit_button');
                 editBtn.addEventListener('click', () => {
 
-                    editModal.style.display = 'block';
+                    // editModal.style.display = 'block';
+                    editModal.classList.add('show');
 
 
                     editTextarea.value = review.Review;
@@ -338,7 +339,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const reviewForm = document.getElementById('reviewForm');
         reviewForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-
+            if (!confirm("Are you sure you want to submit this review?")) {
+                return; 
+            }
             const review = document.getElementById('review').value;
             const rating = document.getElementById('rating').value;
 
@@ -391,7 +394,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         function closeModal() {
-            editModal.style.display = 'none';
+            // editModal.style.display = 'none';
+            editModal.classList.remove('show');
         }
 
 
@@ -401,12 +405,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.addEventListener('click', (event) => {
             if (event.target === editModal) {
                 closeModal();
+
+
             }
+
         });
 
         let currentReviewPayload = { userId, itemId };
 
         submitEditBtn.addEventListener('click', async () => {
+            if (!confirm("Are you sure you want to submit changes to this review?")) {
+                return; 
+            }
             const review = editTextarea.value;
             const rating = editRating.value;
 
@@ -422,7 +432,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 review,
                 rating
             };
-
+            // console.log(payload);
+            
             try {
                 const response = await fetch('/item/modifyReviewAndRating', {
                     method: 'PATCH',
@@ -443,6 +454,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         deleteReviewBtn.addEventListener('click', async () => {
+
+            if (!confirm("Are you sure you want to delete this review?")) {
+                return; 
+            }
 
             const payload = {
                 userId: currentReviewPayload.userId,
