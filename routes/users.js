@@ -229,11 +229,32 @@ router.post("/updateFavoriteItem", async (req, res) => {
   try {
     validation.isProvided(userId);
     validation.isProvided(itemId);
-    userId = validation.isValidString(userId);
-    validation.isValidObjectId(userId);
-    itemId = validation.isValidString(itemId);
+    validation.isValidString(userId);
     validation.isValidObjectId(itemId);
+    // userId = validation.isValidString(userId);
+    // validation.isValidObjectId(userId);
+    // itemId = validation.isValidString(itemId);
+    // validation.isValidObjectId(itemId);
     const result = await userData.updateFavoriteItem(userId, itemId);
+    if (!result) return res.status(404).json({ error: "Either userId or itemId not found." });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+});
+
+router.post("/currentFavorite", async (req, res) => {
+  const { userId, itemId } = req.body;
+  try {
+    validation.isProvided(userId);
+    validation.isProvided(itemId);
+    validation.isValidString(userId);
+    validation.isValidObjectId(itemId);
+    // userId = validation.isValidString(userId);
+    // validation.isValidObjectId(userId);
+    // itemId = validation.isValidString(itemId);
+    // validation.isValidObjectId(itemId);
+    const result = await userData.currentFavorite(userId, itemId);
     if (!result) return res.status(404).json({ error: "Either userId or itemId not found." });
     return res.status(200).json(result);
   } catch (error) {
