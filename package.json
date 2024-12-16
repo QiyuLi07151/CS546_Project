@@ -12,10 +12,10 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.1",
     "mongodb": "^6.11.0",
-    "xss": "^1.0.15",
-    "express-fileupload": "^1.4.0"
+    "xss": "^1.0.15"
   }
 }

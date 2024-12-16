@@ -79,3 +79,42 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         console.error('Error fetching tags:', e);
     }
 });
+
+const renderOptions = (filteredOptions) => {
+    const $optionsContainer = $(".dropdown-options");
+    $optionsContainer.empty()
+    if (filteredOptions.length === 0) {
+        $optionsContainer.append('<div class="dropdown-option">No tag match</div>');
+    } else {
+        filteredOptions.forEach(option => {
+            $optionsContainer.append(`<div class="dropdown-option"><a href="/listing.html?tagName=${option}">${option}</a></div>`);
+        });
+    }
+    $optionsContainer.show();
+};
+
+$(".dropdown-input").on("input", function() {
+    const inputValue = $(this).val().trim().toLowerCase();
+    if(inputValue.length === 0){
+        return;
+    }
+    $.ajax({
+        url: "/tag/allTags",
+        type: "GET",
+        success: function(data){
+            if("error" in data) return;
+            data = data.map(e => e.TagName);
+            const filteredOptions = data.filter(option => 
+                option.toLowerCase().includes(inputValue)
+            );
+            renderOptions(filteredOptions);
+        }
+    });
+});
+
+
+$(document).on("click", function(e) {
+    if (!$(e.target).closest(".dropdown").length) {
+        $(".dropdown-options").hide();
+    }
+});

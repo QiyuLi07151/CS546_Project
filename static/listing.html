@@ -2,38 +2,41 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Listing Page</title>
-    <link rel='stylesheet' href='../public/css/tags.css' />
-    <link rel='stylesheet' href='../public/css/listing.css' />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Listing Page</title>
+  <link rel='stylesheet' href='../public/css/tags.css' />
+  <link rel='stylesheet' href='../public/css/listing.css' />
 </head>
 
 <body>
-<div class="login">
-    <a id = "login_button" class="login_button" href="login.html">Login</a>
-    <a id = "signup_button" class="signup_button" href="signup.html">SignUp</a>
+  <div class="login">
+    <a id="login_button" class="login_button" href="login.html">Login</a>
+    <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
     <a id="current_user" class="current_user" hidden>Username</a>
     <button id="logout_button" class="logout_button" hidden>Logout</button>
-</div>
+  </div>
 
-<header>
+  <header>
     <h1>Place Holder Title</h1>
-</header>
+  </header>
 
-<div class="nav_bar">
+  <div class="nav_bar">
     <a class="page" href="index.html">Home</a>
     <a class="page" href="search.html">Search</a>
     <a class="page" href="tags.html">Search By Tag</a>
     <a id="add_item" class="page" href="addItem.html" hidden>addItem</a>
     <a class="page" href="wishlist.html">Wishlist</a>
-</div>
+  </div>
 
-<ul id = "search_results">
-</ul>
-<p id="error" hidden></p>
-<div class="container">
-  
+  <ul id="text_search_results">
+  </ul>
+
+  <div id="pagination"></div>
+
+  <p id="error" hidden></p>
+  <!-- <div class="container"> -->
+
     <!-- <div class="item">
       <img src="game1.jpg" alt="Game 1">
       <p>Game 1</p>
@@ -57,8 +60,8 @@
     <!-- Add up to 5 more items as needed -->
   </div>
 
-<footer></footer>
-<script src='../public/js/listing.js'></script>
+  <footer></footer>
+  <script src='../public/js/listing.js'></script>
 </body>
 
 </html>

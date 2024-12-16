@@ -66,18 +66,18 @@ router.patch("/addTagToItem", async (req, res) => {
 
 //ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus
 router.post("/addItem", async (req, res) => {
-    
+
     if (!req.files || !req.files.itemImg) {
         return res.status(400).json({ error: 'No files were uploaded.' });
     }
-   
-    let itemImgFile = req.files.itemImg; 
 
-   
+    let itemImgFile = req.files.itemImg;
+
+
     const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
     await itemImgFile.mv(uploadPath);
 
-    
+
     const itemImg = '/public/images/' + itemImgFile.name;
     const data = req.body;
     let {
@@ -86,7 +86,7 @@ router.post("/addItem", async (req, res) => {
         itemDesc,
         itemTags,
         itemPrice,
-        
+
         itemStatus
     } = data;
     // console.log("data:" + data);
@@ -124,7 +124,7 @@ router.post("/addItem", async (req, res) => {
     }
     itemName = xss(itemName);
     itemDesc = xss(itemDesc);
-    for(let itemTag of itemTags){
+    for (let itemTag of itemTags) {
         itemTag = xss(itemTag);
     }
     // itemImg = xss(itemImg);
@@ -318,12 +318,15 @@ router.post("/name", async (req, res) => {
         itemName = validation.isValidString(itemName);
         itemName = xss(itemName);
         // get item by itemName
-        const items = await itemData.getItemByName(itemName);
 
+        // const items = await itemData.getItemByName(itemName);
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
 
-        // return
-        return res.status(200).json(items);
+        const result = await itemData.searchItemsByName(itemName, page, limit);
+
+        return res.status(200).json(result);
     } catch (error) {
         const errorMessage = error.message || error;
 
@@ -334,5 +337,7 @@ router.post("/name", async (req, res) => {
         }
     }
 });
+
+
 
 export default router;

@@ -44,16 +44,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 });
 
+
 let searchForm = document.getElementById('search_form');
 let searchText = document.getElementById("text_search");
+let currentPage = 1;
 searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    try{
-        let nameSearch = searchText.value;
-        let homeUrl = window.location.origin;
-        let searchUrl = homeUrl + "/listing.html?itemName=" + nameSearch;
-        window.location = searchUrl;
-    }catch (e){
-        console.error('Error:', e);
+    try {
+        let nameSearch = searchText.value.trim();
+        if (!nameSearch) throw "Please enter a search keyword.";
+
+        let searchUrl = `${window.location.origin}/listing.html?itemName=${encodeURIComponent(nameSearch)}&page=${currentPage}`;
+        window.location.href = searchUrl; 
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error);
     }
 });

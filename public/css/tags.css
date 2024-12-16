@@ -96,3 +96,31 @@ header {
 .tag_name:hover {
     color: #4CAF50;
 }
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-input {
+    width: 200px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+.dropdown-option {
+    padding: 8px;
+    cursor: pointer;
+}
+.dropdown-option:hover {
+    background-color: #f0f0f0;
+}
