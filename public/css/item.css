@@ -151,6 +151,30 @@ header {
   opacity: 0.9;
 }
 
+.Favorited {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.not-Favorited {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.Favorited:hover,
+.not-Favorited:hover {
+  opacity: 0.9;
+}
+.item_wish button {
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Reviews section styling */
 .reviews {
   margin-top: 40px; /* Increased spacing */
@@ -310,7 +334,7 @@ header {
   /* background-color: #f0f8ff; */
   /* border: 1px solid #dcdcdc; */
   /* border-radius: 8px;  */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
 .make_review_rating form {
@@ -336,20 +360,18 @@ header {
 }
 
 .make_review_rating button[type="submit"] {
-  align-self: flex-start;
-  padding: 10px 20px;
-  font-size: 16px;
+  background: #333;
   color: #fff;
-  background-color: #007bff;
+  padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .make_review_rating button[type="submit"]:hover {
-  background-color: #0056b3;
+  background: #575757;
 }
+
 
 #editModal.modal {
   display: none;
