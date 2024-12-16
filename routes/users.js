@@ -264,11 +264,11 @@ router.post("/currentFavorite", async (req, res) => {
 
 router.get("/wishlist", async (req, res) => {
   try {
-    const user = req.session.user;
-    if (!user) {
+    if (!req.session.user) {
       return res.status(400).json({ error: "Not logged in" });
     }
-    const wishlistItems = [];
+    let wishlistItems = [];
+    let user = await userData.getUserById(req.session.user._id);
     if (!user.Wishlist) {
       res.status(200).json([]);
     } else {
