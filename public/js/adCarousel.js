@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adDotsContainer = document.getElementById('adDots');
 
     try {
-        const response = await fetch('/advertisements', { method: 'GET' });
+        const response = await fetch('/user/advertisements', { method: 'GET' });
         const { advertisements } = await response.json();
 
         if (advertisements && advertisements.length > 0) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="ad-content">
                 <h3>${ad.Title}</h3>
                 <p>${ad.Description}</p>
-                <span><strong>Item ID:</strong> ${ad.ItemName}</span>
+                <span><strong>Item Name:</strong> ${ad.ItemName}</span>
             </div>
         `;
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             slides[currentIndex].classList.add('active');
             dots[currentIndex].classList.add('active');
-        }, 5000); 
+        }, 5000); // Switch every 5 seconds
     }
 
     function showError(message) {

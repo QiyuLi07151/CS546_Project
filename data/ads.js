@@ -32,7 +32,7 @@ export const addAd = async (Image, ItemName, Title, Description) => {
         Image,
         ItemName,
         Title,
-        Description,
+        Description
     });
     if (!newAd.acknowledged || !newAd.insertedId) {
         throw 'Could not add advertisement';

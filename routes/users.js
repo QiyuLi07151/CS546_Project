@@ -241,27 +241,27 @@ router.post("/updateFavoriteItem", async (req, res) => {
   }
 });
 
-router.get("/userId/wishlist", async (req, res) => {
+router.get("/wishlist", async (req, res) => {
   try {
-    let userId = req.query.userId;
-    validation.isProvided(userId);
-    userId = validation.isValidString(userId);
-    validation.isValidObjectId(userId);
-
-    const user = await userData.getUserById(userId);
-
-    const wishlistItems = [];
-    for (const itemId of user.Wishlist) {
-      const item = await itemData.getItemById(itemId);
-      if (item) {
-        wishlistItems.push(item);
-      }
+    const user = req.session.user;
+    if (!user) {
+      return res.status(400).json({ error: "Not logged in" });
     }
-
-    res.json(wishlistItems);
-
+    const wishlistItems = [];
+    if (!user.Wishlist) {
+      res.status(200).json([]);
+    } else {
+      for (const itemId of user.Wishlist) {
+        const item = await itemData.getItemById(itemId);
+        if (item) {
+          wishlistItems.push(item);
+        }
+      }
+      res.status(200).json(wishlistItems);
+    }
   } catch (e) {
-    res.status(400).json({ error: e });
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch wishlist" });
   }
 });
 
@@ -325,23 +325,33 @@ router.get('/getUserIdByName', async (req, res) => {
 
 
 
-router.post("/addAd", async (req, res) => {
+router.get("/advertisements", async(req, res) => {
   try {
-    const { Image, ItemName, Title, Description } = req.body;
-
-    if (!Image || !ItemName || !Title || !Description) {
-      return res.status(400).json({ error: "All fields are required." });
-    }
-
-    let ad = await adData.addAd(Image, ItemName, Title, Description);
-
-    res.status(200).json({ message: "Advertisement added successfully", id: ad._id.toString() });
+    let advertisements = await adData.getAd(3);
+      res.status(200).json({ advertisements });
   } catch (error) {
-    console.error("Error adding advertisement:", error);
-    res.status(500).json({ error: "Failed to add advertisement." });
+      console.error("Error fetching advertisements:", error);
+      res.status(500).json({ error: "Failed to fetch advertisements" });
   }
 });
 
+
+router.post("/advertisements", async(req, res) => {
+  try {
+      const { Image, ItemName, Title, Description } = req.body;
+
+      if (!Image || !ItemName || !Title || !Description) {
+          return res.status(400).json({ error: "All fields are required" });
+      }
+
+      const newAd = { Image, ItemName, Title, Description };
+      await adData.addAd(newAd);
+      res.status(201).json({ message: "Advertisement added successfully!" });
+  } catch (error) {
+      console.error("Error adding advertisement:", error);
+      res.status(500).json({ error: "Failed to add advertisement" });
+  }
+});
 
 
 export default router;

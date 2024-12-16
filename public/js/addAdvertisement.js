@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fetchAdvertisements = async () => {
         try {
-            const response = await fetch("/advertisement.html");
+            const response = await fetch("/advertisements");
             const { advertisements } = await response.json();
 
             adContainer.innerHTML = ""; 
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const response = await fetch("/user/addAd", {
+            const response = await fetch("/user/advertisements", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

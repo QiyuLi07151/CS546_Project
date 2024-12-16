@@ -4,62 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wish List</title>
-    <link rel='stylesheet' href='../public/css/wishlist.css' />
-
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="/public/css/wishlist.css">
 </head>
 
 <body>
-    <div class="wishlist-container">
-        <div class="wishlist-header">
-            <h1>Wish List</h1>
-            <!-- <div class="search-bar">
-                <input type="text" placeholder="Search by name or tag">
-            </div> -->
+    <div class="login">
+        <a id="login_button" class="login_button" href="login.html">Login</a>
+        <a id="signup_button" class="signup_button" href="signup.html">SignUp</a>
+        <a id="current_user" class="current_user" hidden>Username</a>
+        <button id="logout_button" class="logout_button" hidden>Logout</button>
+      </div>
+
+
+    <main>
+        <div id="wishlist-container">
+            <p id="wishlist-message">Loading your wishlist...</p>
+            <ul id="wishlist-items" class="wishlist-items"></ul>
         </div>
-        <div id="wishlist-items"></div>
-        <p id="empty-wishlist" style="display: none;">No items in your wishlist.</p>
-    </div>
+    </main>
 
-    <script>
-        async function fetchWishlist() {
-            try {
-                const response = await fetch('/userId/wishlist');
-                const wishlistItems = await response.json();
+    <footer></footer>
 
-                const wishlistContainer = document.getElementById('wishlist-items');
-                const emptyWishlist = document.getElementById('empty-wishlist');
-
-                if (wishlistItems.length === 0) {
-                    emptyWishlist.style.display = 'block';
-                    return;
-                }
-
-                wishlistItems.forEach(item => {
-                    const wishlistItem = document.createElement('div');
-                    wishlistItem.classList.add('wishlist-item');
-
-                    wishlistItem.innerHTML = `
-                        <img src="${item.Image}" alt="${item.Name}">
-                        <div class="wishlist-details">
-                            <h2>${item.Name}</h2>
-                            <p>Price: ${item.Price}<br>Rating: ${item.Avg_rating}</p>
-                            <p class="tags">${item.Tags ? item.Tags.join(' | ') : ''}</p>
-                        </div>
-                        // <div class="wishlist-actions">
-                        //     <button class="delete-button" data-id="${item.Id}">Delete</button>
-                        // </div>
-                    `;
-
-                    wishlistContainer.appendChild(wishlistItem);
-                });
-            } catch (error) {
-                console.error('Error fetching wishlist:', error);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchWishlist);
-    </script>
+    <script src="/public/js/wishlist.js"></script>
 </body>
 
 </html>
