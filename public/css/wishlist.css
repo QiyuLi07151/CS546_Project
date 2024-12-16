@@ -11,26 +11,9 @@ header {
     padding: 10px 20px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 24px;
-}
 
-header nav {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-}
 
-header nav a,
-header nav button {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-}
+
 
 header nav a.active {
     border-bottom: 2px solid #fff;

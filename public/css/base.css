@@ -1,0 +1,124 @@
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* Header styling */
+header {
+  background: #333;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Navigation bar styling */
+.nav_bar {
+  display: flex;
+  justify-content: center;
+  background: #444;
+  padding: 10px 0;
+}
+
+.nav_bar a {
+  color: #fff;
+  padding: 14px 20px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.nav_bar a:hover {
+  background: #575757;
+}
+
+.nav_bar .current_page {
+  background: #575757;
+}
+
+/* Login section styling */
+.login {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #333
+}
+
+.login a,
+.login button {
+  margin-left: 10px;
+  color: #333;
+  text-decoration: none;
+  background: #ddd;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.login a:hover,
+.login button:hover {
+  background: #ccc;
+}
+
+/* Footer styling */
+/* footer {
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+} */
+
+/* Container styling */
+.container {
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 800px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+form {
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form button {
+  background: #333;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #575757;
+}

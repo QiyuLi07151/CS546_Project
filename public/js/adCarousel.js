@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('/user/advertisements', { method: 'GET' });
         const { advertisements } = await response.json();
+        // console.log(advertisements);
 
         if (advertisements && advertisements.length > 0) {
             advertisements.forEach((ad, index) => {
@@ -27,7 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (index === 0) adSlide.classList.add('active');
 
         adSlide.innerHTML = `
-            <img src="${ad.Image}" alt="${ad.Title}" />
+            <a href="/item.html?itemId=${ad._id}">
+                <img src="${ad.Image}" alt="${ad.Title}" />
+            </a>
             <div class="ad-content">
                 <h3>${ad.Title}</h3>
                 <p>${ad.Description}</p>
