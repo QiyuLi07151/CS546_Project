@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             }
         } catch (error) {
-            console.error('There is a error when you make a review:', error);
+            console.error('There is a error when you fetch items data:', error);
 
         }
         // console.log(itemData);
