@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (itemName) {
             await fetchAndRenderResults('/item/name', { name: itemName }, page, 'POST');
         } else if (tagName) {
-            await fetchAndRenderResults('/tag/tagName', { tagName: tagName }, page, 'GET');
+            await fetchAndRenderResults('/tag/tagName',{tagName: tagName}, page, 'GET');
         } else {
             throw "Invalid query parameters.";
         }
@@ -76,13 +76,12 @@ async function fetchAndRenderResults(url, body, page, method) {
         // } else {
         //     url += `?${new URLSearchParams({ ...body, page }).toString()}`;
         // }
-
-        let response;
-        if (method === 'POST') {
+        if(method === 'POST'){
+            let response;
             response = await fetch(`${url}?page=${page}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
+                body: JSON.stringify(body)
             });
             if (!response.ok) {
                 const errorResponse = await response.json().catch(() => ({ error: "Failed to parse error response" }));;
@@ -91,18 +90,18 @@ async function fetchAndRenderResults(url, body, page, method) {
             const { items, totalPages, currentPage } = await response.json();
             renderSearchResultsItem(items);
             renderPagination(totalPages, currentPage, body.name || body.tagName, url, method);
-        } else if (method === 'GET') {
-            const query = new URLSearchParams({ ...body, page }).toString();
-            response = await fetch(`${url}?${query}`, {
+        }else if(method === 'GET'){
+            let response;
+            url += `?tagName=${body.tagName}&page=${page}`;
+            response = await fetch(url, {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
             });
             if (!response.ok) {
                 const errorResponse = await response.json().catch(() => ({ error: "Failed to parse error response" }));;
                 throw new Error(`Failed to fetch search results: ${JSON.stringify(errorResponse)}`);
             }
-            const { tags, totalPages, currentPage } = await response.json();
-            renderSearchResultsTag(tags);
+            const { items, totalPages, currentPage } = await response.json();
+            renderSearchResultsItem(items);
             renderPagination(totalPages, currentPage, body.name || body.tagName, url, method);
         }
 
