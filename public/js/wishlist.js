@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <div class="item">
                     <img src="${item.ImageUrl}" alt="${item.Name}" class="item-image">
                     <div class="item-details">
-                        <h2>${item.Name}</h2>
+                        <a href="/item?itemId=${item._id.toString()}">${item.Name}</a>
                         <p>${item.Description}</p>
                         <p><strong>Price:</strong> $${item.Price}</p>
                     </div>
