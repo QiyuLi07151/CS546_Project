@@ -32,11 +32,8 @@ export const getItemById = async (itemId) => {
 };
 
 export const getItemByIds = async (itemIds, page) => {
-    const limit = 5;
-    const skip = (page - 1) * limit;
-    const newItemIds = itemIds.slice(skip, skip + limit);
     const items = [];
-    await fetchItems(items, newItemIds);
+    await fetchItems(items, itemIds);
     return items;
 };
 

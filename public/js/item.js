@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const itemImageDiv = document.getElementById('item_image');
         if (item.Image) {
             // console.log(item.Image);
-            
+
             let itemImage = document.createElement('img');
             itemImage.src = item.Image;
             itemImage.alt = item.Name;
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // tag part
         // console.log(item.Tags);
-        
+
         item.Tags.forEach(async tag => {
 
 
@@ -117,11 +117,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             let tagData = await responseTag.json();
-            
-            
-            let targetTagName = tagData.find(t => t.TagName === tag);
-            
-            let tagId = targetTagName ? targetTagName._id : null;
+
+            let tagId = tagData ? tagData._id : null;
             console.log(tagId);
             let responseUpVote = await fetch('/tag/currentUpvote', {
                 method: 'POST',
@@ -210,6 +207,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.textContent = hasFavorited ? 'hasFavorited' : 'hasNotFavorited';
             button.className = hasFavorited ? 'Favorited' : 'not-Favorited';
         }
+        
+        function removeDuplicatesById(data) {
+            const seenIds = new Set();
+            return data.filter(item => {
+                if (!seenIds.has(item._id)) {
+                    seenIds.add(item._id);
+                    return true;
+                }
+                return false;
+            });
+        }
 
         try {
             const response = await fetch('/tag/tagNames', {
@@ -222,14 +230,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (response.ok) {
                 itemData = await response.json();
-
+                itemData = removeDuplicatesById(itemData);
 
             }
         } catch (error) {
             console.error('There is a error when you fetch items data:', error);
 
         }
-        // console.log(itemData);
+        console.log(itemData);
 
 
         const recommendationList = document.getElementById('recommendation_list');
@@ -353,7 +361,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         let make_review_rating = document.getElementById("make_review_rating");
         make_review_rating.hidden = false;
         if (localStorage.getItem("role") == "Seller") {
-            make_review_rating.hidden = true;
+            // if seller already left a review
+
+            const params = new URLSearchParams({ itemId, userName });
+
+            let queryUser = `/user/isMadeReview?${params.toString()}`;
+            const userResponse = await fetch(queryUser, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = await userResponse.json();
+            // console.log(res);
+
+            if (res.isMadeReview) {
+                make_review_rating.hidden = true;
+            }
+            // make_review_rating.hidden = true;
         }
         else if (localStorage.getItem("role") == "Buyer") {
             // if buyer already left a review
@@ -379,7 +404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         reviewForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (!confirm("Are you sure you want to submit this review?")) {
-                return; 
+                return;
             }
             const review = document.getElementById('review').value;
             const rating = document.getElementById('rating').value;
@@ -454,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         submitEditBtn.addEventListener('click', async () => {
             if (!confirm("Are you sure you want to submit changes to this review?")) {
-                return; 
+                return;
             }
             const review = editTextarea.value;
             const rating = editRating.value;
@@ -472,7 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rating
             };
             // console.log(payload);
-            
+
             try {
                 const response = await fetch('/item/modifyReviewAndRating', {
                     method: 'PATCH',
@@ -495,7 +520,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         deleteReviewBtn.addEventListener('click', async () => {
 
             if (!confirm("Are you sure you want to delete this review?")) {
-                return; 
+                return;
             }
 
             const payload = {

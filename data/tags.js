@@ -80,19 +80,17 @@ export const getItemsByTag = async (tagName) => {
 
 export const getTagsByName = async (tagName) => {
   // Query the tags collection for soft matching
-  const tags = await tagsCollection
-    .find({ TagName: { $regex: tagName, $options: "i" } }) // Case-insensitive match
-    .toArray();
+  const tag = await tagsCollection
+    .findOne({ TagName: tagName });
 
-  if (tags.length === 0) {
+  if (tag.length === 0) {
     throw new Error(`No tags found matching the name "${tagName}"`);
   }
 
   // Convert ObjectId to string for consistency
-  return tags.map((tag) => {
+  
     tag._id = tag._id.toString();
     return tag;
-  });
 };
 
 
