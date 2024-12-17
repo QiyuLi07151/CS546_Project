@@ -40,11 +40,11 @@ header {
   display: flex;
   flex-direction: row;
   gap: 15px;
-  overflow: visible; /* 允许内容完全显示 */
+  overflow: visible; 
   position: relative;
-  padding-right: 15px; /* 保持右侧间距 */
-  align-items: flex-start; /* 子元素从顶部开始排列 */
-  height: auto; /* 确保高度根据内容自动调整 */
+  padding-right: 15px; 
+  align-items: flex-start; 
+  height: auto; 
 }
 
 .left_section {
