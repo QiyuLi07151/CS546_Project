@@ -81,14 +81,13 @@ router.post("/addItem", async (req, res) => {
     if (!req.files || !req.files.itemImg) {
         return res.status(400).json({ error: 'No files were uploaded.' });
     }
-    itemTags = itemTags.split(',').map(tag => tag.trim());
+    itemTags = itemTags.split(',').map(tag => xss(tag.trim()));
     let itemImgFile = req.files.itemImg;
     itemPrice = parseFloat(itemPrice);
     itemStatus = itemStatus === "true";
     const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
     await itemImgFile.mv(uploadPath);
-
-
+    itemDesc = xss(itemDesc);
     const itemImg = '/public/images/' + itemImgFile.name;
     const newData = {ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus};
     if (!newData || Object.keys(newData).length === 0)
