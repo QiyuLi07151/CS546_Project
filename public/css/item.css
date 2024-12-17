@@ -1,4 +1,4 @@
-/* Global styling */
+
 /* Global styling */
 body {
   font-family: "Roboto", sans-serif; /* Modern font */
@@ -38,13 +38,16 @@ header {
 .item_display {
   flex: 2;
   display: flex;
+  gap: 20px;
+  margin-bottom: 30px; /* Increased spacing */
+  height: 300px;
   flex-direction: row;
   gap: 15px;
-  overflow: visible; 
+  overflow: visible; /* 允许内容完全显示 */
   position: relative;
-  padding-right: 15px; 
-  align-items: flex-start; 
-  height: auto; 
+  padding-right: 15px; /* 保持右侧间距 */
+  align-items: flex-start; /* 子元素从顶部开始排列 */
+  height: auto; /* 确保高度根据内容自动调整 */
 }
 
 .left_section {
@@ -67,7 +70,8 @@ header {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 500px; /* Fixed height for the right section */
+  max-height: 300px; /* Fixed height for the right section */
+  /* max-height: 300px;  */
   overflow: hidden; /* Ensures content does not overflow */
   position: relative; /* Position for internal elements */
   padding-right: 15px; /* Add some padding for better alignment */
@@ -87,44 +91,52 @@ header {
   word-wrap: break-word; /* Force breaking words that are too long */
   overflow-wrap: break-word; /* Break long words to fit the width */
   white-space: normal; /* Allow wrapping */
-  overflow: hidden;
+  overflow: visible; /* Ensure all content is visible */
   text-overflow: clip; /* No ellipsis */
   max-width: 100%; /* Ensure it stays within the parent container */
   padding: 5px;
 }
 
+.item_desc p {
+  overflow: visible;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  max-height: 100px; /* Restrict height */
+  transition: max-height 0.3s ease;
+}
 
 
 /* Tags styling */
 
-.item_tags {
-  display: flex;
-  flex-direction: column;
+.tag-item {
+  display: inline-flex;
   align-items: center;
+  gap: 8px;
+  margin: 5px;
+  padding: 5px 10px;
   background-color: #f0f8ff;
   border-radius: 6px;
   border: 1px solid #d0d0d0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: background-color 0.3s ease;
-  overflow: hidden;
 }
 
-.item_tags:hover {
+.tag-item:hover {
   background-color: #e8f4ff;
 }
 
-.item_tags a {
+.tag-item a {
   text-decoration: none;
   color: #007bff;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-.item_tags a:hover {
+.tag-item a:hover {
   color: #0056b3;
 }
 
-.item_tags button {
+.tag-item button {
   font-family: "Arial", sans-serif;
   font-size: 14px;
   cursor: pointer;
