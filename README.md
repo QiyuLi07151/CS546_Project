@@ -35,7 +35,7 @@ This project is built using the following technologies:
 ## Installation
 
 1. Clone the repository:  
-   git clone https://github.com/QiyuLi07151/CS546_Project
+   [git clone https://github.com/QiyuLi07151/CS546_Project](https://github.com/QiyuLi07151/CS546_Project.git)
    cd CS546_Project
 
 2. Install dependencies:
