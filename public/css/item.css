@@ -67,7 +67,11 @@ header {
   display: flex;
   flex-direction: column;
   gap: 15px;
+<<<<<<< Updated upstream
   /* max-height: 300px;  */
+=======
+  height: 500px; /* Fixed height for the right section */
+>>>>>>> Stashed changes
   overflow: hidden; /* Ensures content does not overflow */
   position: relative; /* Position for internal elements */
   padding-right: 15px; /* Add some padding for better alignment */
@@ -87,7 +91,7 @@ header {
   word-wrap: break-word; /* Force breaking words that are too long */
   overflow-wrap: break-word; /* Break long words to fit the width */
   white-space: normal; /* Allow wrapping */
-  overflow: visible; /* Ensure all content is visible */
+  overflow: hidden;
   text-overflow: clip; /* No ellipsis */
   max-width: 100%; /* Ensure it stays within the parent container */
   padding: 5px;
@@ -97,35 +101,34 @@ header {
 
 /* Tags styling */
 
-.tag-item {
-  display: inline-flex;
+.item_tags {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin: 5px;
-  padding: 5px 10px;
   background-color: #f0f8ff;
   border-radius: 6px;
   border: 1px solid #d0d0d0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: background-color 0.3s ease;
+  overflow: hidden;
 }
 
-.tag-item:hover {
+.item_tags:hover {
   background-color: #e8f4ff;
 }
 
-.tag-item a {
+.item_tags a {
   text-decoration: none;
   color: #007bff;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-.tag-item a:hover {
+.item_tags a:hover {
   color: #0056b3;
 }
 
-.tag-item button {
+.item_tags button {
   font-family: "Arial", sans-serif;
   font-size: 14px;
   cursor: pointer;
