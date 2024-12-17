@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.textContent = hasFavorited ? 'hasFavorited' : 'hasNotFavorited';
             button.className = hasFavorited ? 'Favorited' : 'not-Favorited';
         }
-        // 去重 itemData 中的对象，基于 _id
+        
         function removeDuplicatesById(data) {
             const seenIds = new Set();
             return data.filter(item => {

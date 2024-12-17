@@ -36,10 +36,15 @@ header {
 
 /* Item display section */
 .item_display {
+  flex: 2;
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px; /* Increased spacing */
-  height: 300px;
+  flex-direction: row;
+  gap: 15px;
+  overflow: visible; /* 允许内容完全显示 */
+  position: relative;
+  padding-right: 15px; /* 保持右侧间距 */
+  align-items: flex-start; /* 子元素从顶部开始排列 */
+  height: auto; /* 确保高度根据内容自动调整 */
 }
 
 .left_section {
@@ -62,7 +67,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  max-height: 300px; /* Fixed height for the right section */
+  /* max-height: 300px;  */
   overflow: hidden; /* Ensures content does not overflow */
   position: relative; /* Position for internal elements */
   padding-right: 15px; /* Add some padding for better alignment */
@@ -88,13 +93,7 @@ header {
   padding: 5px;
 }
 
-.item_desc p {
-  overflow: visible;
-  text-overflow: ellipsis;
-  white-space: pre-wrap;
-  max-height: 100px; /* Restrict height */
-  transition: max-height 0.3s ease;
-}
+
 
 /* Tags styling */
 
