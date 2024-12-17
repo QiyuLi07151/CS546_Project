@@ -67,11 +67,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 15px;
-<<<<<<< Updated upstream
-  /* max-height: 300px;  */
-=======
   height: 500px; /* Fixed height for the right section */
->>>>>>> Stashed changes
   overflow: hidden; /* Ensures content does not overflow */
   position: relative; /* Position for internal elements */
   padding-right: 15px; /* Add some padding for better alignment */
