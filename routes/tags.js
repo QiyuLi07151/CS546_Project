@@ -41,6 +41,7 @@ router.get("/tagId", async (req, res) => {
 router.get("/tagName", async (req, res) => {
   let tagName = req.query.tagName;
   let page = req.query.page ? req.query.page : "1";
+  const limit = 5;
   try {
     validation.isProvided(tagName);
     tagName = validation.isValidString(tagName);
@@ -51,11 +52,30 @@ router.get("/tagName", async (req, res) => {
   tagName = xss(tagName);
   try {
     const itemIds = await tagData.getItemsByTag(tagName);
-    const ids = itemIds.map(item => item.ItemId);
-    const items = await itemData.getItemByIds(ids, page);
-    return res.json(items);
+    if (!itemIds || itemIds.length === 0) {
+      return res.status(404).json({ error: "No items found for the given tag." });
+    }
+
+    const allItemIds = itemIds.map(item => {
+      if (ObjectId.isValid(item.ItemId)) return item.ItemId;
+      console.warn("Invalid ItemId found:", item.ItemId);
+      return null;
+    }).filter(id => id !== null);
+
+    console.log("All valid ItemIds:", allItemIds);
+
+    const totalItems = allItemIds.length;
+    const totalPages = Math.ceil(totalItems / limit);
+    const items = await itemData.getItemByIds(allItemIds, page);
+
+    return res.status(200).json({
+      items,
+      totalPages,
+      currentPage: page,
+      totalItems
+    });
   } catch (error) {
-    return res.status(404).json({ error: error });
+    return res.status(404).json({ error: error.message || "Unknown error occurred" });
   }
 });
 
@@ -72,8 +92,8 @@ router.patch("/tagNames", async (req, res) => {
       return res.status(400).json({ error: error });
     }
   }
-  
-  for(let tag of tagNames){
+
+  for (let tag of tagNames) {
     tag = xss(tag);
   }
 
