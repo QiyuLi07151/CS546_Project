@@ -62,17 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData(addItemForm);
 
-        const itemData = {
-            ownerId: id,
-            itemName: formData.get('itemName'),
-            itemDesc: formData.get('itemDesc'),
-            itemTags: formData.get('itemTags').split(',').map(tag => tag.trim()),
-            itemPrice: parseFloat(formData.get('itemPrice')),
-            itemImg: formData.get('itemImg'),
-            itemStatus: formData.get('itemStatus') === 'true'
-        };
-        console.log("itemStatus1:" + itemData.itemStatus);
-        // console.log("itemStatus2:" + itemData.itemStatus);
+        if(formData.get('itemDesc').trim() > 150){
+            alert('description should be longer than 150 characters.');
+            return;
+        }
+        formData.append('ownerId', id);
+        formData.set(itemName, formData.get('itemName').trim());
+        formData.set(itemDesc, formData.get('itemDesc').trim());
+        formData.set(itemPrice, parseFloat(formData.get('itemPrice').trim()));
         try {
             const response = await fetch('/item/addItem', {
                 method: 'POST',

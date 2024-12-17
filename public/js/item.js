@@ -117,11 +117,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             let tagData = await responseTag.json();
-            console.log(tagData);
+            
             
             let targetTagName = tagData.find(t => t.TagName === tag);
+            
             let tagId = targetTagName ? targetTagName._id : null;
-
+            console.log(tagId);
             let responseUpVote = await fetch('/tag/currentUpvote', {
                 method: 'POST',
                 headers: {
@@ -367,7 +368,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
             });
             let res = await userResponse.json();
-            console.log(res);
+            // console.log(res);
 
             if (res.isMadeReview) {
                 make_review_rating.hidden = true;
