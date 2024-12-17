@@ -55,7 +55,16 @@ router.get("/tagName", async (req, res) => {
     if (!itemIds || itemIds.length === 0) {
       return res.status(404).json({ error: "No items found for the given tag." });
     }
-    const totalItems = itemIds.length;
+
+    const allItemIds = itemIds.map(item => {
+      if (ObjectId.isValid(item.ItemId)) return item.ItemId;
+      console.warn("Invalid ItemId found:", item.ItemId);
+      return null;
+    }).filter(id => id !== null);
+
+    console.log("All valid ItemIds:", allItemIds);
+
+    const totalItems = allItemIds.length;
     const totalPages = Math.ceil(totalItems / limit);
     const items = await itemData.getItemByIds(itemIds, page);
 
