@@ -66,7 +66,7 @@ router.get("/tagName", async (req, res) => {
 
     const totalItems = allItemIds.length;
     const totalPages = Math.ceil(totalItems / limit);
-    const items = await itemData.getItemByIds(itemIds, page);
+    const items = await itemData.getItemByIds(allItemIds, page);
 
     return res.status(200).json({
       items,
