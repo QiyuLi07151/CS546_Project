@@ -18,7 +18,6 @@ export const getTagById = async (tagId) => {
   let tag = await tagsCollection.findOne({ "_id": new ObjectId(tagId) });
   // console.log(tag);
 
-
   if (!tag) {
     throw new Error("No tag found with the given tagId");
   }
