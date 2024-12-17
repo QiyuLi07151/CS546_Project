@@ -36,15 +36,24 @@ This project is built using the following technologies:
 
 1. Clone the repository:  
    [git clone https://github.com/QiyuLi07151/CS546_Project](https://github.com/QiyuLi07151/CS546_Project.git)
+   
    cd CS546_Project
 
-2. Install dependencies:
+2. Configure environment variables:
+    Create a settings.js file in the /config directory and add the following variables:
+
+    export const mongoConfig = {
+        serverUrl: your url
+        database: '546_Final_Project'
+    };
+
+3. Install dependencies:
     npm install
 
-3. Run the project:
+4. Run the project:
     npm start
 
-4. Open your browser and visit:
+5. Open your browser and visit:
     http://localhost:3000
 
 
