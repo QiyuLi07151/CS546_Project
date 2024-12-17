@@ -3,6 +3,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     let logout_button = document.getElementById("logout_button");
     let login_button = document.getElementById("login_button");
     let signup_button = document.getElementById("signup_button");
+    let add_item = document.getElementById("add_item");
+
+    let isOwner = false;
+    try {
+        const response = await fetch('/user/currentUserIsOwner');
+        const data = await response.json();
+        isOwner = data.isOwner;
+    } catch (error) {
+        alert('Failed to get user ID, please make sure you are logged in.');
+        return;
+    }
+    if (isOwner) {
+        add_item.hidden = false;
+    }
 
     // Handle user login state
     if (localStorage.getItem("username") !== "null") {
@@ -26,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (response.ok) {
                 localStorage.setItem("username", null);
                 window.location.href = "/";
+                add_item.hidden = true;
             } else {
                 alert("Failed to log out.");
             }
