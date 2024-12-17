@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         login_button.hidden = true;
         signup_button.hidden = true;
     }
-
+    
     // Logout functionality
     logout_button.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
         }
         // console.log(data);
-        
+
         wishlistMessage.style.display = "none";
 
         data.forEach((item) => {
