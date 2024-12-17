@@ -364,7 +364,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         let make_review_rating = document.getElementById("make_review_rating");
         make_review_rating.hidden = false;
         if (localStorage.getItem("role") == "Seller") {
-            make_review_rating.hidden = true;
+            // if seller already left a review
+
+            const params = new URLSearchParams({ itemId, userName });
+
+            let queryUser = `/user/isMadeReview?${params.toString()}`;
+            const userResponse = await fetch(queryUser, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = await userResponse.json();
+            // console.log(res);
+
+            if (res.isMadeReview) {
+                make_review_rating.hidden = true;
+            }
+            // make_review_rating.hidden = true;
         }
         else if (localStorage.getItem("role") == "Buyer") {
             // if buyer already left a review
