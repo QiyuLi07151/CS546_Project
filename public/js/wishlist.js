@@ -12,7 +12,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         login_button.hidden = true;
         signup_button.hidden = true;
     }
-
+    let isOwner = false;
+    try {
+        const response = await fetch('/user/currentUserIsOwner');
+        const data = await response.json();
+        isOwner = data.isOwner;
+    } catch (error) {
+        alert('Failed to get user ID, please make sure you are logged in.');
+        return;
+    }
+    if (isOwner) {
+        add_item.hidden = false;
+    }
     // Logout functionality
     logout_button.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -57,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
         }
         // console.log(data);
-        
+
         wishlistMessage.style.display = "none";
 
         data.forEach((item) => {
