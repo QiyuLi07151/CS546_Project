@@ -62,13 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData(addItemForm);
 
-        if(formData.get('itemDesc').trim() > 150){
-            alert('description should be longer than 150 characters.');
+        if(formData.get('itemDesc').trim() > 50){
+            alert('description should be no longer than 50 characters.');
             return;
         }
         formData.append('ownerId', id);
         formData.set(itemName, formData.get('itemName').trim());
         formData.set(itemDesc, formData.get('itemDesc').trim());
+        formData.set(itemImg, formData.get('itemImg'));
         formData.set(itemPrice, parseFloat(formData.get('itemPrice').trim()));
         try {
             const response = await fetch('/item/addItem', {

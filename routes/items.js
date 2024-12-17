@@ -75,20 +75,21 @@ router.post("/addItem", async (req, res) => {
         itemDesc,
         itemTags,
         itemPrice,
+        itemImg,
 
         itemStatus
     } = data;
-    if (!req.files || !req.files.itemImg) {
+    /*if (!req.files || !req.files.itemImg) {
         return res.status(400).json({ error: 'No files were uploaded.' });
-    }
+    }*/
     itemTags = itemTags.split(',').map(tag => xss(tag.trim().toLowerCase()));
-    let itemImgFile = req.files.itemImg;
+    //let itemImgFile = req.files.itemImg;
     itemPrice = parseFloat(itemPrice);
     itemStatus = itemStatus === "true";
-    const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
-    await itemImgFile.mv(uploadPath);
+    //const uploadPath = path.join(__dirname, '../public/images', itemImgFile.name);
+    //await itemImgFile.mv(uploadPath);
     itemDesc = xss(itemDesc);
-    const itemImg = '/public/images/' + itemImgFile.name;
+    //const itemImg = '/public/images/' + itemImgFile.name;
     const newData = {ownerId, itemName, itemDesc, itemTags, itemPrice, itemImg, itemStatus};
     if (!newData || Object.keys(newData).length === 0)
         return res.status(400).json({ error: 'There are no fields in the request body.' });
@@ -103,8 +104,8 @@ router.post("/addItem", async (req, res) => {
         validation.isProvided(ownerId);
         validation.isProvided(itemName);
         validation.isProvided(itemDesc);
-        if (itemDesc.length > 150) {
-            throw "Item description should be less than 150 characters.";
+        if (itemDesc.length > 50) {
+            throw "Item description should be less than 50 characters.";
         }
         validation.isProvided(itemTags);
         validation.isProvided(itemPrice);
