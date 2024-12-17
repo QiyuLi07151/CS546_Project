@@ -1,5 +1,6 @@
 import { ads } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import res from "express/lib/response.js";
 
 const adsCollection = await ads();
 
@@ -26,15 +27,18 @@ export const getAdById = async (adId) => {
 
 export const addAd = async (Image, ItemName, Title, Description) => {
     if (!Image || !ItemName || !Title || !Description) {
-        return res.status(400).json({ error: "All fields are required." });
+        throw ('error: All fields are required.');
     }
-    const newAd = await adsCollection.insertOne({
-        Image,
-        ItemName,
-        Title,
-        Description
-    });
-    if (!newAd.acknowledged || !newAd.insertedId) {
+    const newItemId = new ObjectId();
+    const newAd = {
+        _id: newItemId,
+        Image: Image,
+        ItemName: ItemName,
+        Title: Title,
+        Description: Description,
+    };
+    const response = await adsCollection.insertOne(newAd);
+    if (!response.acknowledged || !response.insertedId) {
         throw 'Could not add advertisement';
     }
     return await getAdById(newAd.insertedId.toString());

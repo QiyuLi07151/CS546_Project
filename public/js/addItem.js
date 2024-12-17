@@ -70,7 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.set(itemName, formData.get('itemName').trim());
         formData.set(itemDesc, formData.get('itemDesc').trim());
         formData.set(itemImg, formData.get('itemImg'));
-        formData.set(itemPrice, parseFloat(formData.get('itemPrice').trim()));
+        formData.set(itemPrice, parseFloat(formData.get('itemPrice').trim()))
+        let doAd = true;
+        if(!(formData.get('itemStatus') === 'true')){
+            doAd = false;
+        }
+        formData.set(itemStatus, formData.get('itemStatus'));
         try {
             const response = await fetch('/item/addItem', {
                 method: 'POST',
@@ -81,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json();
                 throw new Error(errorData.error);
             }
+
 
             alert('Item added successfully');
             addItemForm.reset();
