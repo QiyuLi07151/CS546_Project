@@ -118,10 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let tagData = await responseTag.json();
 
-
-            let targetTagName = tagData.find(t => t.TagName === tag);
-
-            let tagId = targetTagName ? targetTagName._id : null;
+            let tagId = tagData ? tagData._id : null;
             console.log(tagId);
             let responseUpVote = await fetch('/tag/currentUpvote', {
                 method: 'POST',
