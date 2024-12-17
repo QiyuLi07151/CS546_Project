@@ -120,7 +120,7 @@ router.post("/tags", async (req, res) => {
   let tagName = req.body.tagName;
   try {
     validation.isProvided(tagName);
-    tagName = validation.isValidString(tagName);
+    tagName = validation.isValidString(tagName).toLowerCase();
   } catch (error) {
     return res.status(400).json({ error: error });
   }
